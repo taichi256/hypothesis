@@ -552,6 +552,10 @@ MonoBehaviour:
   speed: 3
   dush: 30
   dushLength: 4
+  dushDecelerateTiming: 15
+  dushEndTiming: 20
+  startDushSpeed: 20
+  dushAcceleration: 1
 --- !u!70 &1487654003
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
