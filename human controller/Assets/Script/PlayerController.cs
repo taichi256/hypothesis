@@ -20,13 +20,17 @@ public class PlayerController : MonoBehaviour
     public float dush= 9.0f;
     public int dushLength = 6;
     bool goDush = false;
-    bool stopDush = false;
-    float dushPositionX = 0;
-    float dushPositionY = 0;
     int dushDirection = 0;
 
-    bool lastDirection = true;
+    //fixeUpdateRecorderはdush時のフレームを記録するためのint型の変数です
+    int fixedUpdateRecorder =0;
+    public int dushDecelerateTiming = 60;
+    public int dushEndTiming = 80;
+    public float startDushSpeed = 9.0f;
+    float dushSpeed=0.0f;
+    public float dushAcceleration = 0.25f;
 
+    bool lastDirection = true;
     //仮設置の変数Direction
     float Direction = 0.0f;
 
@@ -40,7 +44,7 @@ public class PlayerController : MonoBehaviour
         //仮設置→方向キーで左右移動、ジャンプをスペースキー
         //ダブルジャンプはNキー、ダッシュはBキー
         Direction = Input.GetAxisRaw("Horizontal");
-        if (!stopDush)
+        if (fixedUpdateRecorder==0)
         {
             if (Direction > 0) GoRight();
             if (Direction < 0) GoLeft();
@@ -73,6 +77,8 @@ public class PlayerController : MonoBehaviour
             goLeft = false;
             lastDirection = false;
         }
+
+        //ジャンプの処理
         if (onGround && goJump||goAirJump && !onGround)
         {
             Vector2 jumpPw=new Vector2(0, 0); ;
@@ -83,6 +89,8 @@ public class PlayerController : MonoBehaviour
             goJump = false;
             goAirJump = false;
         }
+
+        //ダッシュの処理
         if (goDush)
         {   
             dushDirection = 0;
@@ -94,20 +102,29 @@ public class PlayerController : MonoBehaviour
             {
                 dushDirection = -1;
             }
-            Vector2 dushPw = new Vector2(dushDirection * dush,0);
             rbody.velocity = new Vector2(0,0);
-            rbody.AddForce(dushPw, ForceMode2D.Impulse);
             rbody.bodyType = RigidbodyType2D.Kinematic;
             goDush = false;
-            stopDush = true;
-            dushPositionX = transform.position.x;
-            dushPositionY = transform.position.y;
+            fixedUpdateRecorder = 1;
         }
-        if(stopDush && new Vector2((int)transform.position.x,(int)transform.position.y)== new Vector2((int)dushPositionX,(int)dushPositionY) + new Vector2(dushDirection*dushLength, 0))
-        {;
-            rbody.bodyType = RigidbodyType2D.Dynamic;
-            rbody.velocity = new Vector2(0,0);
-            stopDush = false;
+        if (fixedUpdateRecorder != 0)
+        {
+            fixedUpdateRecorder++;
+            if (fixedUpdateRecorder <= 1 + dushDecelerateTiming)
+            {
+                rbody.velocity = new Vector2(-1*dushDirection * startDushSpeed, 0);
+            }
+            if (fixedUpdateRecorder < 1 + dushEndTiming)
+            {
+                rbody.bodyType = RigidbodyType2D.Dynamic;
+                dushSpeed -= dushAcceleration;
+                rbody.velocity = new Vector2(-1*dushDirection * dushSpeed, 0);
+            }
+            if (fixedUpdateRecorder == 1 + dushEndTiming)
+            {
+                fixedUpdateRecorder = 0;
+                rbody.velocity = new Vector2(0, 0);
+            }
         }
     }
 
