@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     //仮設置の変数Direction
     float Direction = 0.0f;
 
+    bool grab = false;
+
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
@@ -46,8 +48,6 @@ public class PlayerController : MonoBehaviour
         //仮設置→方向キーで左右移動、ジャンプをスペースキー
         //ダブルジャンプはNキー、ダッシュはBキー
         Direction = Input.GetAxisRaw("Horizontal");
-        if (fixedUpdateRecorder==0)
-        {
             if (Direction > 0) GoRight();
             if (Direction < 0) GoLeft();
             if (Input.GetButtonDown("Jump"))
@@ -62,12 +62,12 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
-        }
         //ここまで仮設置
     }
 
     void FixedUpdate()
     {
+
         onGround = Physics2D.Linecast(transform.position, transform.position - (transform.up * 0.1f), groundLayer);
         if (onGround)
         {
@@ -109,11 +109,11 @@ public class PlayerController : MonoBehaviour
 
 
         //ジャンプの処理
-        if (onGround && goJump||goAirJump && !onGround)
+        if (onGround && goJump || goAirJump && !onGround)
         {
-            Vector2 jumpPw=new Vector2(0, 0); ;
-            if (goJump)jumpPw = new Vector2(0, jump);
-            if (goAirJump)jumpPw = new Vector2(0, airjump);
+            Vector2 jumpPw = new Vector2(0, 0); ;
+            if (goJump) jumpPw = new Vector2(0, jump);
+            if (goAirJump) jumpPw = new Vector2(0, airjump);
 
             rbody.AddForce(jumpPw, ForceMode2D.Impulse);
             goJump = false;
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
         //ダッシュの処理
         if (goDush)
-        {   
+        {
             dushDirection = 0;
             if (lastDirection == true)
             {
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
             {
                 dushDirection = -1;
             }
-            rbody.velocity = new Vector2(0,0);
+            rbody.velocity = new Vector2(0, 0);
             rbody.bodyType = RigidbodyType2D.Kinematic;
             goDush = false;
             fixedUpdateRecorder = 1;
@@ -142,53 +142,94 @@ public class PlayerController : MonoBehaviour
             fixedUpdateRecorder++;
             if (fixedUpdateRecorder <= 1 + dushDecelerateTiming)
             {
-                rbody.velocity = new Vector2(-1*dushDirection * startDushSpeed, 0);
+                rbody.velocity = new Vector2(-1 * dushDirection * startDushSpeed, 0);
             }
             if (fixedUpdateRecorder < 1 + dushEndTiming)
             {
                 rbody.bodyType = RigidbodyType2D.Dynamic;
                 dushSpeed -= dushAcceleration;
-                rbody.velocity = new Vector2(-1*dushDirection * dushSpeed, 0);
+                rbody.velocity = new Vector2(-1 * dushDirection * dushSpeed, 0);
             }
             if (fixedUpdateRecorder == 1 + dushEndTiming)
             {
                 fixedUpdateRecorder = 0;
-                rbody.velocity = new Vector2(rbody.velocity.x, 0);
+                rbody.velocity = new Vector2(0, 0);
                 notOnGroundSpeed = 0.0f;
-            }
-        }
-
-        void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.gameObject.CompareTag("grabable block"))
-            {
-                rbody.bodyType = RigidbodyType2D.Kinematic;
-                rbody.velocity = new Vector2(0,0);
             }
         }
     }
 
-//別クラスからの呼び出し用
-//ジャンプ→Jump、右移動GoRight、左移動GoLeft、ジャンプJump、ダブルジャンプAirJump
-//掴むGrab、走るDush
-    public void Jump()
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+        if (collision.gameObject.CompareTag("grabable block"))
+        {
+            rbody.bodyType = RigidbodyType2D.Kinematic;
+            rbody.velocity = new Vector2(0, 0);
+            grab = true;
+        }
+        if (transform.parent == null && collision.gameObject.CompareTag("move block"))
+        {
+            Vector2 hitPos = collision.contacts[0].point;
+            if (hitPos.y <= rbody.transform.position.y)
+            {
+                var emptyObject = new GameObject();
+                emptyObject.transform.parent = collision.gameObject.transform;
+                transform.parent = emptyObject.transform;
+            }
+        }
+    }
+    void OnCollisionExit2D(Collision2D collision)
     {
+        if (transform.parent != null && collision.gameObject.CompareTag("move block"))
+        {
+            Vector2 hitPos = collision.contacts[0].point;
+            if (hitPos.y <= rbody.transform.position.y)
+            {
+                transform.parent = null;
+            }
+        }
+    }
+
+        //別クラスからの呼び出し用
+        //ジャンプ→Jump、右移動GoRight、左移動GoLeft、ジャンプJump、ダブルジャンプAirJump
+        //掴むGrab、走るDush
+        public void Jump()
+    {
+        if (check() == false) return;
         goJump = true;
     }
     public void AirJump()
     {
+        if (check() == false) return;
         goAirJump = true;
     }
     public void GoRight()
     {
+        if (check() == false) return;
         goRight = true;
     }
     public void GoLeft()
     {
+        if (check() == false) return;
         goLeft = true;
     }
     public void Dush()
     {
+        if (check() == false) return;
         goDush = true;
+    }
+
+    bool check()
+    { 
+            if (grab == true)
+        {
+            grab = false;
+            rbody.bodyType = RigidbodyType2D.Dynamic;
+        }
+        if (fixedUpdateRecorder == 0)
+        {
+            return true;
+        }
+        return false;
     }
 }
