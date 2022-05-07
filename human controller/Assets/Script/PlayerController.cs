@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public float speed = 3.0f;
     bool goRight = false;
     bool goLeft = false;
+    public float notOnGroundAcceleration = 0.2f;
+    public float notOnGroundSpeed = 0.0f;
 
     public float dush= 9.0f;
     public int dushLength = 6;
@@ -67,16 +69,44 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         onGround = Physics2D.Linecast(transform.position, transform.position - (transform.up * 0.1f), groundLayer);
-        if (goRight) {
-            rbody.velocity = new Vector2(speed, rbody.velocity.y);
-            goRight = false;
-            lastDirection = true;
+        if (onGround)
+        {
+            notOnGroundSpeed = 0.0f;
+            if (goRight)
+            {
+                rbody.velocity = new Vector2(speed, rbody.velocity.y);
+                goRight = false;
+                lastDirection = true;
+            }
+            if (goLeft)
+            {
+                rbody.velocity = new Vector2(-1 * speed, rbody.velocity.y);
+                goLeft = false;
+                lastDirection = false;
+            }
         }
-        if (goLeft) {
-            rbody.velocity = new Vector2(-1 * speed, rbody.velocity.y);
-            goLeft = false;
-            lastDirection = false;
+        else
+        {
+            if (notOnGroundSpeed == 0.0f)
+            {
+                notOnGroundSpeed = rbody.velocity.x;
+            }
+            if (goRight)
+            {
+                notOnGroundSpeed += notOnGroundAcceleration;
+                rbody.velocity = new Vector2(notOnGroundSpeed, rbody.velocity.y);
+                goRight = false;
+                lastDirection = true;
+            }
+            if (goLeft)
+            {
+                notOnGroundSpeed -= notOnGroundAcceleration;
+                rbody.velocity = new Vector2(notOnGroundSpeed, rbody.velocity.y);
+                goLeft = false;
+                lastDirection = false;
+            }
         }
+
 
         //ジャンプの処理
         if (onGround && goJump||goAirJump && !onGround)
@@ -123,7 +153,8 @@ public class PlayerController : MonoBehaviour
             if (fixedUpdateRecorder == 1 + dushEndTiming)
             {
                 fixedUpdateRecorder = 0;
-                rbody.velocity = new Vector2(0, 0);
+                rbody.velocity = new Vector2(rbody.velocity.x, 0);
+                notOnGroundSpeed = 0.0f;
             }
         }
     }
