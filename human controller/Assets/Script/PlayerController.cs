@@ -157,6 +157,15 @@ public class PlayerController : MonoBehaviour
                 notOnGroundSpeed = 0.0f;
             }
         }
+
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("grabable block"))
+            {
+                rbody.bodyType = RigidbodyType2D.Kinematic;
+                rbody.velocity = new Vector2(0,0);
+            }
+        }
     }
 
 //別クラスからの呼び出し用
