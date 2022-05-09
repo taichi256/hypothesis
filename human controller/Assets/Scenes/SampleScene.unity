@@ -419,7 +419,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080661094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.44, y: 2.21, z: 0}
+  m_LocalPosition: {x: -5.94, y: 1.08, z: 0}
   m_LocalScale: {x: 0.16416909, y: 0.4332257, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -637,7 +637,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487653998}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1, y: -0.55, z: 0}
+  m_LocalPosition: {x: -0.54, y: -1.24, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -685,12 +685,10 @@ MonoBehaviour:
   speed: 3
   notOnGroundAcceleration: 0.2
   notOnGroundSpeed: 0
-  dush: 30
-  dushLength: 4
-  dushDecelerateTiming: 15
-  dushEndTiming: 20
-  startDushSpeed: 20
-  dushAcceleration: 1
+  dushDecelerateTiming: 20
+  dushEndTiming: 30
+  startDushSpeed: 15
+  dushAcceleration: 1.5
 --- !u!70 &1487654003
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

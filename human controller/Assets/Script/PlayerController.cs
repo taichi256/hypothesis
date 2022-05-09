@@ -19,8 +19,6 @@ public class PlayerController : MonoBehaviour
     public float notOnGroundAcceleration = 0.2f;
     public float notOnGroundSpeed = 0.0f;
 
-    public float dush= 9.0f;
-    public int dushLength = 6;
     bool goDush = false;
     int dushDirection = 0;
 
@@ -31,6 +29,7 @@ public class PlayerController : MonoBehaviour
     public float startDushSpeed = 9.0f;
     float dushSpeed=0.0f;
     public float dushAcceleration = 0.25f;
+    float gravityScaleRecord=0;
 
     bool lastDirection = true;
     //仮設置の変数Direction
@@ -67,7 +66,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
         onGround = Physics2D.Linecast(transform.position, transform.position - (transform.up * 0.1f), groundLayer);
         if (onGround)
         {
@@ -124,6 +122,8 @@ public class PlayerController : MonoBehaviour
         if (goDush)
         {
             dushDirection = 0;
+            gravityScaleRecord = rbody.gravityScale;
+            rbody.gravityScale = 0;
             if (lastDirection == true)
             {
                 dushDirection = 1;
@@ -132,42 +132,47 @@ public class PlayerController : MonoBehaviour
             {
                 dushDirection = -1;
             }
-            rbody.velocity = new Vector2(0, 0);
-            rbody.bodyType = RigidbodyType2D.Kinematic;
+            rbody.velocity = new Vector2(0,0);
             goDush = false;
             fixedUpdateRecorder = 1;
+            dushSpeed = startDushSpeed;
         }
         if (fixedUpdateRecorder != 0)
         {
+            Debug.Log(rbody.velocity);
             fixedUpdateRecorder++;
             if (fixedUpdateRecorder <= 1 + dushDecelerateTiming)
             {
-                rbody.velocity = new Vector2(-1 * dushDirection * startDushSpeed, 0);
+                rbody.velocity = new Vector2(dushDirection * startDushSpeed, 0);
             }
-            if (fixedUpdateRecorder < 1 + dushEndTiming)
+            else if (fixedUpdateRecorder < 1 + dushEndTiming)
             {
-                rbody.bodyType = RigidbodyType2D.Dynamic;
                 dushSpeed -= dushAcceleration;
-                rbody.velocity = new Vector2(-1 * dushDirection * dushSpeed, 0);
+                rbody.velocity = new Vector2(dushDirection * dushSpeed, rbody.velocity.y);
+                rbody.gravityScale = gravityScaleRecord;
             }
             if (fixedUpdateRecorder == 1 + dushEndTiming)
             {
-                fixedUpdateRecorder = 0;
-                rbody.velocity = new Vector2(0, 0);
-                notOnGroundSpeed = 0.0f;
+                dushEnd();
             }
         }
     }
-
+    void dushEnd()
+    {
+        fixedUpdateRecorder = 0;
+        rbody.velocity = new Vector2(0, 0);
+        notOnGroundSpeed = 0.0f;
+    }
+       
         void OnCollisionEnter2D(Collision2D collision)
         {
-        if (collision.gameObject.CompareTag("grabable block"))
+        if (collision.gameObject.CompareTag("grabable block")&& fixedUpdateRecorder == 0)
         {
             rbody.bodyType = RigidbodyType2D.Kinematic;
             rbody.velocity = new Vector2(0, 0);
             grab = true;
         }
-        if (transform.parent == null && collision.gameObject.CompareTag("move block"))
+        if (transform.parent == null && collision.gameObject.CompareTag("move block")&& fixedUpdateRecorder == 0)
         {
             Vector2 hitPos = collision.contacts[0].point;
             if (hitPos.y <= rbody.transform.position.y)
@@ -226,7 +231,11 @@ public class PlayerController : MonoBehaviour
             grab = false;
             rbody.bodyType = RigidbodyType2D.Dynamic;
         }
-        if (fixedUpdateRecorder == 0)
+        if(fixedUpdateRecorder > 1 + dushDecelerateTiming)
+        {
+            dushEnd();
+            return true;
+        }else if (fixedUpdateRecorder == 0)
         {
             return true;
         }
