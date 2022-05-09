@@ -109,9 +109,14 @@ public class PlayerController : MonoBehaviour
         //ジャンプの処理
         if (onGround && goJump || goAirJump && !onGround)
         {
+            if(goAirJump && !onGround)
+            {
+                rbody.velocity=new Vector2(0, 0);
+            }
             Vector2 jumpPw = new Vector2(0, 0); ;
             if (goJump) jumpPw = new Vector2(0, jump);
             if (goAirJump) jumpPw = new Vector2(0, airjump);
+            notOnGroundSpeed = 0.0f;
 
             rbody.AddForce(jumpPw, ForceMode2D.Impulse);
             goJump = false;

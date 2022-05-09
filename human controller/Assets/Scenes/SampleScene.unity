@@ -681,8 +681,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   jump: 30
-  airjump: 50
-  speed: 3
+  airjump: 30
+  speed: 4
   notOnGroundAcceleration: 0.2
   notOnGroundSpeed: 0
   dushDecelerateTiming: 20
