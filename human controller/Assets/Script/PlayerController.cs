@@ -37,9 +37,15 @@ public class PlayerController : MonoBehaviour
 
     bool grab = false;
 
+    private GameObject mainCamera;
+    private Rigidbody2D cameraRb;
+    public float cameraSpeed;
+
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        mainCamera = GameObject.Find("Main Camera");
+        cameraRb = mainCamera.GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -161,6 +167,14 @@ public class PlayerController : MonoBehaviour
                 dushEnd();
             }
         }
+
+        if (CameraRelativePosition().x >= 7.5 && CameraRelativePosition().x <= 7.8)
+        {
+            Vector2 force = new Vector2(1.0f, 0);
+            cameraRb.AddForce(force * cameraSpeed);
+            Debug.Log("ok");
+        }
+        
     }
     void dushEnd()
     {
@@ -187,6 +201,10 @@ public class PlayerController : MonoBehaviour
                 transform.parent = emptyObject.transform;
             }
         }
+        if(collision.gameObject.CompareTag("GameOver"))
+        {
+            transform.position = new Vector2(0,-2);
+        }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
@@ -198,6 +216,14 @@ public class PlayerController : MonoBehaviour
                 transform.parent = null;
             }
         }
+    }
+
+    private Vector2 CameraRelativePosition()
+    {
+        
+        var relativePos = transform.position - mainCamera.transform.position;
+
+        return relativePos;
     }
 
         //別クラスからの呼び出し用
