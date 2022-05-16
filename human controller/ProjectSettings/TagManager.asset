@@ -6,6 +6,8 @@ TagManager:
   tags:
   - grabable block
   - move block
+  - move block
+  - GameOver
   layers:
   - Default
   - TransparentFX
