@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     private GameObject mainCamera;
     private Rigidbody2D cameraRb;
     public float cameraSpeed;
+    private bool rotateCameraForward;
 
     void Start()
     {
@@ -172,8 +173,21 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 force = new Vector2(1.0f, 0);
             cameraRb.AddForce(force * cameraSpeed);
-            Debug.Log("ok");
+            StartCoroutine(DelayCoroutine());
+            rotateCameraForward = true;
         }
+
+        if (CameraRelativePosition().x >= -7.8 && CameraRelativePosition().x <= -7.5 && !rotateCameraForward)
+        {
+            Vector2 force = new Vector2(-1.0f, 0);
+            cameraRb.AddForce(force * cameraSpeed);
+            StartCoroutine(DelayCoroutine());
+        }
+        if (CameraRelativePosition().x > -7.0)
+        {
+            rotateCameraForward = false;
+        }
+        Debug.Log(CameraRelativePosition());
         
     }
     void dushEnd()
@@ -224,6 +238,13 @@ public class PlayerController : MonoBehaviour
         var relativePos = transform.position - mainCamera.transform.position;
 
         return relativePos;
+    }
+
+    private IEnumerator DelayCoroutine()
+    {
+        // 3秒間待つ
+        yield return new WaitForSeconds(5);
+
     }
 
         //別クラスからの呼び出し用

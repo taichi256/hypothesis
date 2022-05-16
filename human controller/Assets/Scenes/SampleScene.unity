@@ -1061,7 +1061,7 @@ MonoBehaviour:
   dushEndTiming: 30
   startDushSpeed: 15
   dushAcceleration: 1.5
-  cameraSpeed: 15000
+  cameraSpeed: 17000
 --- !u!70 &1487654003
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
