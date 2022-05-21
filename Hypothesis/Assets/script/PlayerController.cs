@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D cameraRb;
     public float cameraSpeed;
     private bool rotateCameraForward;
+    private bool onInvisibleWall;
+    private bool rightCamera;
+    private bool leftCamera;
 
     void Start()
     {
@@ -68,6 +71,14 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
+        if (CameraRelativePosition().x >= 0.1)
+        {
+            rightCamera = true;
+        }
+        else if (CameraRelativePosition().x <= -0.1)
+        {
+            leftCamera = false;
+        }
     }
 
     void FixedUpdate()
@@ -167,28 +178,21 @@ public class PlayerController : MonoBehaviour
                 dushEnd();
             }
         }
-
-        if (CameraRelativePosition().x >= 7.5 && CameraRelativePosition().x <= 7.8)
-        {
-            Vector2 force = new Vector2(1.0f, 0);
-            cameraRb.AddForce(force * cameraSpeed);
-            StartCoroutine(DelayCoroutine());
-            rotateCameraForward = true;
-        }
-
-        if (CameraRelativePosition().x >= -7.8 && CameraRelativePosition().x <= -7.5 && !rotateCameraForward)
-        {
-            Vector2 force = new Vector2(-1.0f, 0);
-            cameraRb.AddForce(force * cameraSpeed);
-            StartCoroutine(DelayCoroutine());
-        }
-        if (CameraRelativePosition().x > -7.0)
-        {
-            rotateCameraForward = false;
-        }
-       // Debug.Log(CameraRelativePosition());
         
     }
+
+    void LateUpdate()
+    {
+        if (rightCamera)
+        {
+            mainCamera.transform.position = new Vector3(this.transform.position.x, 2, -10);
+        }
+        else if (leftCamera)
+        {
+            mainCamera.transform.position = new Vector3(this.transform.position.x, 2, -10);
+        }
+    }
+
     void dushEnd()
     {
         fixedUpdateRecorder = 0;
@@ -291,19 +295,5 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         return false;
-    }
-    class Dousa
-    {
-        new HashMap={
-        Dousa(int i)
-        {
-            if (i == 1)
-            {
-                return this.
-            }else if (i == 2)
-            {
-
-            }
-        }
     }
 }
