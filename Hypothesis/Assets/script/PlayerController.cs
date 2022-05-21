@@ -38,18 +38,21 @@ public class PlayerController : MonoBehaviour
     bool grab = false;
 
     private GameObject mainCamera;
-    private Rigidbody2D cameraRb;
+    private Rigidbody2D mainCamraRb;
     public float cameraSpeed;
     private bool rotateCameraForward;
-    private bool onInvisibleWall;
-    private bool rightCamera;
+    public bool onInvisibleWall;
+    public bool rightCamera;
     private bool leftCamera;
+    mainCameraScript mainCameraScript;
+
 
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
         mainCamera = GameObject.Find("Main Camera");
-        cameraRb = mainCamera.GetComponent<Rigidbody2D>();
+        mainCamraRb = mainCamera.GetComponent<Rigidbody2D>();
+        mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
     }
 
     void Update()
@@ -71,14 +74,6 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
-        if (CameraRelativePosition().x >= 0.1)
-        {
-            rightCamera = true;
-        }
-        else if (CameraRelativePosition().x <= -0.1)
-        {
-            leftCamera = false;
-        }
     }
 
     void FixedUpdate()
@@ -178,18 +173,28 @@ public class PlayerController : MonoBehaviour
                 dushEnd();
             }
         }
-        
+
+        if (CameraRelativePosition().x >= 0 && !mainCameraScript.onInvisibleWall)
+        {
+            Invoke(nameof(OkCamera),0.1f);
+        }
+        if (mainCameraScript.onInvisibleWall)
+        {
+            rightCamera = false;
+            mainCameraScript.onInvisibleWall = false;
+        }
     }
 
     void LateUpdate()
     {
         if (rightCamera)
         {
-            mainCamera.transform.position = new Vector3(this.transform.position.x, 2, -10);
+            mainCamraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
+            //mainCamera.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+5, -10);
         }
-        else if (leftCamera)
+        else
         {
-            mainCamera.transform.position = new Vector3(this.transform.position.x, 2, -10);
+            mainCamraRb.velocity = new Vector2(0, 0);
         }
     }
 
@@ -235,6 +240,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OkCamera()
+    {
+        rightCamera = true;
+    }
+
     private Vector2 CameraRelativePosition()
     {
         
@@ -245,9 +255,8 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DelayCoroutine()
     {
-        // 3秒間待つ
-        yield return new WaitForSeconds(5);
-
+        yield return null;
+        rightCamera = true;
     }
 
         //別クラスからの呼び出し用

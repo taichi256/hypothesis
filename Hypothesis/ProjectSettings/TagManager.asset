@@ -7,6 +7,9 @@ TagManager:
   - grabable block
   - GameOver
   - move block
+  - inVisibleWall
+  - mainCamera
+  - invisibleWall
   layers:
   - Default
   - TransparentFX
@@ -14,8 +17,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - inVisibleWall
+  - mainCamera
   - 
   - 
   - 
