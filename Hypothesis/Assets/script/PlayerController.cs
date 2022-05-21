@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     int fixedUpdateRecorder =0;
     public int dushDecelerateTiming = 60;
     public int dushEndTiming = 80;
-    public float startDushSpeed = 9.0f;
+    public float startDushSpeed = 4.0f;
     float dushSpeed=0.0f;
     public float dushAcceleration = 0.25f;
     float gravityScaleRecord=0;
@@ -46,6 +46,11 @@ public class PlayerController : MonoBehaviour
     private bool leftCamera;
     mainCameraScript mainCameraScript;
 
+    float firstPosX;
+    float firstPosY;
+    float firstCamPosX;
+    float firstCamPosY;
+
 
     void Start()
     {
@@ -53,6 +58,10 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("Main Camera");
         mainCamraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
+        firstPosX = this.transform.position.x;
+        firstPosY = this.transform.position.y;
+        firstCamPosX = mainCamera.transform.position.x;
+        firstCamPosY = mainCamera.transform.position.y;
     }
 
     void Update()
@@ -174,22 +183,24 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (CameraRelativePosition().x >= 0 && !mainCameraScript.onInvisibleWall)
+        if (CameraRelativePosition().x >= -1 && CameraRelativePosition().x <= 1)
         {
-            Invoke(nameof(OkCamera),0.1f);
+            rightCamera = true;
+            leftCamera = true;
         }
-        if (mainCameraScript.onInvisibleWall)
+        if (!(CameraRelativePosition().x >= -2 && CameraRelativePosition().x <= 2) && leftCamera)
         {
             rightCamera = false;
-            mainCameraScript.onInvisibleWall = false;
+            leftCamera = false;
         }
+        
     }
 
     void LateUpdate()
     {
         if (rightCamera)
         {
-            mainCamraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
+            mainCamraRb.velocity = new Vector2(rbody.velocity.x, 0);
             //mainCamera.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+5, -10);
         }
         else
@@ -225,7 +236,8 @@ public class PlayerController : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("GameOver"))
         {
-            transform.position = new Vector2(0,-2);
+            transform.position = new Vector2(firstPosX,firstPosY);
+            mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
         }
     }
     void OnCollisionExit2D(Collision2D collision)
