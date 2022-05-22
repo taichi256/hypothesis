@@ -5,9 +5,11 @@ using UnityEngine;
 public class mainCameraScript : MonoBehaviour
 {
     public bool onInvisibleWall;
+    private Rigidbody2D cameraRb;
     // Start is called before the first frame update
     void Start()
     {
+        cameraRb = GetComponent<Rigidbody2D>();
         
     }
 
