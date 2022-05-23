@@ -24,18 +24,24 @@ public class PlayerController : MonoBehaviour
 
     //fixeUpdateRecorderはdush時のフレームを記録するためのint型の変数です
     int fixedUpdateRecorder =0;
-    public int dushDecelerateTiming = 60;
+    public int dushDecelerateTiming = 50;
+    public int dushOnGravityTiming = 60;
     public int dushEndTiming = 80;
     public float startDushSpeed = 4.0f;
     float dushSpeed=0.0f;
     public float dushAcceleration = 0.25f;
     float gravityScaleRecord=0;
 
+    public int dushCooltime = 5;
+    int lastDushRecord = 0;
+
     bool lastDirection = true;
     //仮設置の変数Direction
     float Direction = 0.0f;
 
     bool grab = false;
+    public int grabCooltime=5;
+    int lastGrabRecord=0;
 
     private GameObject mainCamera;
     private Rigidbody2D mainCamraRb;
@@ -51,6 +57,14 @@ public class PlayerController : MonoBehaviour
     float firstCamPosX;
     float firstCamPosY;
 
+    public Dictionary<int, Movement> mov = new Dictionary<int, Movement>()
+    {
+        {1, Movement.Dush},
+            {2,Movement.Dush},
+            {3, Movement.AirJump},
+        {4,Movement.NoMovement }
+    };
+    int movKey = 1;
 
     void Start()
     {
@@ -83,6 +97,12 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
+        if (Input.GetButtonDown("1AirJump"))
+        {
+            mov.Remove(1);
+            mov.add(1,Movement.AirJump);
+        }
+        
     }
 
     void FixedUpdate()
@@ -90,6 +110,7 @@ public class PlayerController : MonoBehaviour
         onGround = Physics2D.Linecast(transform.position, transform.position - (transform.up * 0.1f), groundLayer);
         if (onGround)
         {
+            if (movKey != 1) movKey = 1;
             notOnGroundSpeed = 0.0f;
             if (goRight)
             {
@@ -106,10 +127,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (notOnGroundSpeed == 0.0f)
-            {
+            
                 notOnGroundSpeed = rbody.velocity.x;
-            }
+            
             if (goRight)
             {
                 notOnGroundSpeed += notOnGroundAcceleration;
@@ -132,7 +152,7 @@ public class PlayerController : MonoBehaviour
         {
             if(goAirJump && !onGround)
             {
-                rbody.velocity=new Vector2(rbody.velocity.x/2, 0);
+                rbody.velocity=new Vector2(rbody.velocity.x, 0);
             }
             Vector2 jumpPw = new Vector2(0, 0); ;
             if (goJump) jumpPw = new Vector2(0, jump);
@@ -170,6 +190,11 @@ public class PlayerController : MonoBehaviour
             if (fixedUpdateRecorder <= 1 + dushDecelerateTiming)
             {
                 rbody.velocity = new Vector2(dushDirection * startDushSpeed, 0);
+            }else if (fixedUpdateRecorder<1+dushOnGravityTiming)
+            {
+                if (dushDecelerateTiming + 2 == fixedUpdateRecorder) lastDushRecord =1;
+                dushSpeed -= dushAcceleration;
+                rbody.velocity = new Vector2(dushDirection * dushSpeed, 0);
             }
             else if (fixedUpdateRecorder < 1 + dushEndTiming)
             {
@@ -182,7 +207,23 @@ public class PlayerController : MonoBehaviour
                 dushEnd();
             }
         }
-
+        //グラップルのクールタイムの処理
+        if (lastGrabRecord != 0)
+        {
+            lastGrabRecord++;
+            if (2 + grabCooltime == lastGrabRecord)
+            {
+                lastGrabRecord = 0;
+            }
+        }
+        //ダッシュのクールタイムの処理
+        if (lastDushRecord!= 0)
+        {
+            if (onGround != true) { lastDushRecord = 0; }
+            else if (lastDushRecord == 1 + dushCooltime) { lastDushRecord = 0; }
+            else { lastDushRecord++; }
+        }
+        //カメラの処理かな
         if (CameraRelativePosition().x >= -1 && CameraRelativePosition().x <= 1)
         {
             rightCamera = true;
@@ -212,17 +253,21 @@ public class PlayerController : MonoBehaviour
     void dushEnd()
     {
         fixedUpdateRecorder = 0;
-        rbody.velocity = new Vector2(0, 0);
-        notOnGroundSpeed = 0.0f;
+        notOnGroundSpeed = rbody.velocity.x;
     }
        
         void OnCollisionEnter2D(Collision2D collision)
         {
-        if (collision.gameObject.CompareTag("grabable block")&& fixedUpdateRecorder == 0)
+        if (collision.gameObject.CompareTag("grabable block")&& fixedUpdateRecorder == 0 && mov[movKey] == Movement.Grab)
         {
-            rbody.bodyType = RigidbodyType2D.Kinematic;
-            rbody.velocity = new Vector2(0, 0);
-            grab = true;
+            if (lastGrabRecord == 0)
+            {
+                lastGrabRecord++;
+                movKey++;
+                rbody.bodyType = RigidbodyType2D.Kinematic;
+                rbody.velocity = new Vector2(0, 0);
+                grab = true;
+            }
         }
         if (transform.parent == null && collision.gameObject.CompareTag("move block")&& fixedUpdateRecorder == 0)
         {
@@ -276,38 +321,42 @@ public class PlayerController : MonoBehaviour
         //掴むGrab、走るDush
         public void Jump()
     {
-        if (check() == false) return;
+        if (check(Movement.NoMovement) == false) return;
         goJump = true;
     }
     public void AirJump()
     {
-        if (check() == false) return;
+        if (check(Movement.AirJump) == false) return;
         goAirJump = true;
+        movKey++;
     }
     public void GoRight()
     {
-        if (check() == false) return;
+        if (check(Movement.NoMovement) == false) return;
         goRight = true;
     }
     public void GoLeft()
     {
-        if (check() == false) return;
+        if (check(Movement.NoMovement) == false) return;
         goLeft = true;
     }
     public void Dush()
     {
-        if (check() == false) return;
+        if (check(Movement.Dush) == false) return;
+        if (lastDushRecord != 0) return;
         goDush = true;
+        movKey++;
     }
 
-    bool check()
-    { 
-            if (grab == true)
+    bool check(Movement thisMov)
+    {
+        if (thisMov != Movement.NoMovement && thisMov != mov[movKey]) { return false; }
+        if (grab == true)
         {
             grab = false;
             rbody.bodyType = RigidbodyType2D.Dynamic;
         }
-        if(fixedUpdateRecorder > 1 + dushDecelerateTiming)
+        if(fixedUpdateRecorder > 1 + dushOnGravityTiming)
         {
             dushEnd();
             return true;
@@ -316,5 +365,10 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public enum Movement
+    {
+        Grab = 1,
+        AirJump, Dush, NoMovement
     }
 }
