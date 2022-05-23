@@ -59,9 +59,9 @@ public class PlayerController : MonoBehaviour
 
     public Dictionary<int, Movement> mov = new Dictionary<int, Movement>()
     {
-        {1, Movement.Dush},
-            {2,Movement.Dush},
-            {3, Movement.AirJump},
+        {1, Movement.AirJump},
+        {2,Movement.Dush},
+        {3, Movement.AirJump},
         {4,Movement.NoMovement }
     };
     int movKey = 1;
@@ -97,11 +97,11 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
-        if (Input.GetButtonDown("1AirJump"))
+        /*if (Input.GetButtonDown("1AirJump"))
         {
             mov.Remove(1);
             //mov.add(1,Movement.AirJump);
-        }
+        }*/
         
     }
 
@@ -262,6 +262,7 @@ public class PlayerController : MonoBehaviour
         {
             if (lastGrabRecord == 0)
             {
+                Debug.Log("grab");
                 lastGrabRecord++;
                 movKey++;
                 rbody.bodyType = RigidbodyType2D.Kinematic;
@@ -271,6 +272,7 @@ public class PlayerController : MonoBehaviour
         }
         if (transform.parent == null && collision.gameObject.CompareTag("move block")&& fixedUpdateRecorder == 0)
         {
+            Debug.Log("adada");
             Vector2 hitPos = collision.contacts[0].point;
             if (hitPos.y <= rbody.transform.position.y)
             {
