@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("1AirJump"))
         {
             mov.Remove(1);
-            mov.add(1,Movement.AirJump);
+            //mov.add(1,Movement.AirJump);
         }
         
     }
