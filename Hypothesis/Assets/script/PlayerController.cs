@@ -57,14 +57,19 @@ public class PlayerController : MonoBehaviour
     float firstCamPosX;
     float firstCamPosY;
 
-    public Dictionary<int, Movement> mov = new Dictionary<int, Movement>()
+    public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
-        {1, Movement.AirJump},
-        {2,Movement.Dush},
-        {3, Movement.AirJump},
-        {4,Movement.NoMovement }
+        {Movement.AirJump,1},
+        {Movement.Dush,1},
+        {Movement.Grab,1}
     };
-    int movKey = 1;
+
+    public Dictionary<Movement,int> movRest= new Dictionary<Movement, int>()
+    {
+        {Movement.AirJump,0},
+        {Movement.Dush,0},
+        {Movement.Grab,0}
+    };
 
     void Start()
     {
@@ -97,20 +102,17 @@ public class PlayerController : MonoBehaviour
             {
                 Dush();
             }
-        /*if (Input.GetButtonDown("1AirJump"))
-        {
-            mov.Remove(1);
-            //mov.add(1,Movement.AirJump);
-        }*/
         
     }
 
     void FixedUpdate()
     {
-        onGround = Physics2D.Linecast(transform.position, transform.position - (transform.up * 0.1f), groundLayer);
+        onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
         if (onGround)
         {
-            if (movKey != 1) movKey = 1;
+           movRest[Movement.Grab] = mov[Movement.Grab];
+            movRest[Movement.Dush] = mov[Movement.Dush];
+            movRest[Movement.AirJump] = mov[Movement.AirJump];
             notOnGroundSpeed = 0.0f;
             if (goRight)
             {
@@ -145,8 +147,6 @@ public class PlayerController : MonoBehaviour
                 lastDirection = false;
             }
         }
-
-
         //ジャンプの処理
         if (onGround && goJump || goAirJump && !onGround)
         {
@@ -167,7 +167,6 @@ public class PlayerController : MonoBehaviour
         //ダッシュの処理
         if (goDush)
         {
-            Debug.Log("Dush");
             dushDirection = 0;
             gravityScaleRecord = rbody.gravityScale;
             rbody.gravityScale = 0;
@@ -258,13 +257,12 @@ public class PlayerController : MonoBehaviour
        
         void OnCollisionEnter2D(Collision2D collision)
         {
-        if (collision.gameObject.CompareTag("grabable block")&& fixedUpdateRecorder == 0 && mov[movKey] == Movement.Grab)
+        if (collision.gameObject.CompareTag("grabable block") && fixedUpdateRecorder == 0 && movRest[Movement.Grab] != 0)
         {
             if (lastGrabRecord == 0)
             {
-                Debug.Log("grab");
+                mov[Movement.Grab] -= 1;
                 lastGrabRecord++;
-                movKey++;
                 rbody.bodyType = RigidbodyType2D.Kinematic;
                 rbody.velocity = new Vector2(0, 0);
                 grab = true;
@@ -330,7 +328,6 @@ public class PlayerController : MonoBehaviour
     {
         if (check(Movement.AirJump) == false) return;
         goAirJump = true;
-        movKey++;
     }
     public void GoRight()
     {
@@ -347,12 +344,12 @@ public class PlayerController : MonoBehaviour
         if (check(Movement.Dush) == false) return;
         if (lastDushRecord != 0) return;
         goDush = true;
-        movKey++;
     }
 
     bool check(Movement thisMov)
     {
-        if (thisMov != Movement.NoMovement && thisMov != mov[movKey]) { return false; }
+        if (thisMov != Movement.NoMovement && movRest[thisMov]==0) { return false; }
+        else if(thisMov!=Movement.NoMovement){ movRest[thisMov] -= 1; }
         if (grab == true)
         {
             grab = false;
