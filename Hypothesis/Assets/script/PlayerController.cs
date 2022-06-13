@@ -44,12 +44,12 @@ public class PlayerController : MonoBehaviour
     int lastGrabRecord=0;
 
     private GameObject mainCamera;
-    private Rigidbody2D mainCamraRb;
+    private Rigidbody2D mainCameraRb;
     public float cameraSpeed;
     private bool rotateCameraForward;
     public bool onInvisibleWall;
     public bool rightCamera;
-    private bool leftCamera;
+    private bool upCamera;
     mainCameraScript mainCameraScript;
 
     float firstPosX;
@@ -74,8 +74,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
-        mainCamera = GameObject.Find("Main Camera");
-        mainCamraRb = mainCamera.GetComponent<Rigidbody2D>();
+        mainCamera = GameObject.Find("CM vcam1");
+        mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
         firstPosX = this.transform.position.x;
         firstPosY = this.transform.position.y;
@@ -223,29 +223,38 @@ public class PlayerController : MonoBehaviour
             else { lastDushRecord++; }
         }
         //カメラの処理かな
-        if (CameraRelativePosition().x >= -1 && CameraRelativePosition().x <= 1)
+        if (CameraRelativePosition().x >= -1)
         {
             rightCamera = true;
-            leftCamera = true;
         }
-        if (!(CameraRelativePosition().x >= -2 && CameraRelativePosition().x <= 2) && leftCamera)
+        if (CameraRelativePosition().x <= -2)
         {
             rightCamera = false;
-            leftCamera = false;
+        }
+        if (CameraRelativePosition().y >= 1)
+        {
+            upCamera = true;
+        }
+        if (CameraRelativePosition().y <= 0.5)
+        {
+            upCamera = false;
         }
         
     }
 
     void LateUpdate()
     {
-        if (rightCamera)
+        if (rightCamera && !upCamera)
         {
-            mainCamraRb.velocity = new Vector2(rbody.velocity.x, 0);
-            //mainCamera.transform.position = new Vector3(this.transform.position.x, this.transform.position.y+5, -10);
+            mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
         }
-        else
+        if (upCamera && !rightCamera)
         {
-            mainCamraRb.velocity = new Vector2(0, 0);
+            mainCameraRb.velocity = new Vector2(0, rbody.velocity.y);
+        }
+        if (rightCamera && upCamera)
+        {
+            mainCameraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
         }
     }
 
