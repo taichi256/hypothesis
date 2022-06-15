@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 1
-  lastUpdatedAtString: 2022-06-13T18:43:06.090+09:00
-  initializedAtString: 2022-06-13T18:40:11.531+09:00
+  lastUpdatedAtString: 2022-06-16T02:56:49.309+09:00
+  initializedAtString: 2022-06-16T02:56:49.309+09:00
   currentGitRemote:
     name: origin
     url: https://github.com/taichi256/hypothesis.git

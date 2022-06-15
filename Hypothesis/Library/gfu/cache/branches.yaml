@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 2
-  lastUpdatedAtString: 2022-06-13T18:42:38.580+09:00
-  initializedAtString: 2022-06-13T18:42:38.428+09:00
-  localBranches: []
+  lastUpdatedAtString: 2022-06-16T02:46:24.774+09:00
+  initializedAtString: 2022-06-16T02:05:33.551+09:00
+  localBranches:
+  - name: main
+    tracking: origin/main
   remoteBranches:
   - name: origin/HEAD
+    tracking: '[None]'
+  - name: origin/main
+    tracking: '[None]'
+  - name: upstream/main
     tracking: '[None]'
   remotes:
   - name: origin
@@ -27,15 +33,32 @@ MonoBehaviour:
     host: 
     function: 0
     token: 
+  - name: upstream
+    url: https://github.com/taichi256/hypothesis.git
+    login: 
+    user: 
+    host: 
+    function: 0
+    token: 
   localConfigBranches:
-    keys: []
-    values: []
+    keys:
+    - main
+    values:
+    - name: main
+      remote:
+        name: origin
+        url: https://github.com/taichi256/hypothesis.git
+      trackingBranch: main
   remoteConfigBranches:
     keys:
     - origin
+    - upstream
     subKeys:
     - Values:
       - HEAD
+      - main
+    - Values:
+      - main
     subKeyValues:
     - Values:
       - name: HEAD
@@ -43,9 +66,23 @@ MonoBehaviour:
           name: origin
           url: https://github.com/taichi256/hypothesis.git
         trackingBranch: 
+      - name: main
+        remote:
+          name: origin
+          url: https://github.com/taichi256/hypothesis.git
+        trackingBranch: 
+    - Values:
+      - name: main
+        remote:
+          name: upstream
+          url: https://github.com/taichi256/hypothesis.git
+        trackingBranch: 
   configRemotes:
     keys:
     - origin
+    - upstream
     values:
     - name: origin
+      url: https://github.com/taichi256/hypothesis.git
+    - name: upstream
       url: https://github.com/taichi256/hypothesis.git

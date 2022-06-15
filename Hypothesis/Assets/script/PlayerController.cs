@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
 
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
-    public float cameraSpeed;
     private bool rotateCameraForward;
     public bool onInvisibleWall;
     public bool rightCamera;
@@ -56,6 +55,8 @@ public class PlayerController : MonoBehaviour
     float firstPosY;
     float firstCamPosX;
     float firstCamPosY;
+
+    Vector3 vec;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
@@ -88,25 +89,26 @@ public class PlayerController : MonoBehaviour
         //方向キーで左右移動、ジャンプをスペースキー
         //ダブルジャンプはNキー、ダッシュはBキー
         Direction = Input.GetAxisRaw("Horizontal");
-            if (Direction > 0) GoRight();
-            if (Direction < 0) GoLeft();
-            if (Input.GetButtonDown("Jump"))
-            {
-                Jump();
-            }
-            if (Input.GetButtonDown("AirJump"))
-            {
-                AirJump();
-            }
-            if (Input.GetButtonDown("Dush"))
-            {
-                Dush();
-            }
+        if (Direction > 0) GoRight();
+        if (Direction < 0) GoLeft();
         
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+        if (Input.GetButtonDown("AirJump"))
+        {
+            AirJump();
+        }
+        if (Input.GetButtonDown("Dush"))
+        {
+            Dush();
+        }
     }
 
     void FixedUpdate()
     {
+
         onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
         if (onGround)
         {
@@ -223,6 +225,14 @@ public class PlayerController : MonoBehaviour
             else { lastDushRecord++; }
         }
         //カメラの処理かな
+        /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
+        vec = direction * CameraSpeed() * Time.deltaTime;
+        Debug.Log(CameraRelativeRotation());*/
+    }
+
+    void LateUpdate()
+    {
+        //mainCameraRb.velocity = new Vector2(vec.x, vec.y);
         if (CameraRelativePosition().x >= -1)
         {
             rightCamera = true;
@@ -239,11 +249,6 @@ public class PlayerController : MonoBehaviour
         {
             upCamera = false;
         }
-        
-    }
-
-    void LateUpdate()
-    {
         if (rightCamera && !upCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
@@ -319,12 +324,6 @@ public class PlayerController : MonoBehaviour
         return relativePos;
     }
 
-    private IEnumerator DelayCoroutine()
-    {
-        yield return null;
-        rightCamera = true;
-    }
-
         //別クラスからの呼び出し用
         //ジャンプ→Jump、右移動GoRight、左移動GoLeft、ジャンプJump、ダブルジャンプAirJump
         //掴むGrab、走るDush
@@ -378,5 +377,20 @@ public class PlayerController : MonoBehaviour
     {
         Grab = 1,
         AirJump, Dush, NoMovement
+    }
+
+    float CameraRelativeRotation()
+    {
+        float rad = Mathf.Atan2(CameraRelativePosition().x, CameraRelativePosition().y);
+        float degree = rad * Mathf.Rad2Deg;
+
+        return degree;
+    }
+
+    float CameraSpeed()
+    {
+        float speed = Mathf.Pow(Mathf.Sqrt(Mathf.Pow(CameraRelativePosition().x, 2f) + Mathf.Pow(CameraRelativePosition().y, 2f)), 2f) * 10;
+
+        return speed;
     }
 }
