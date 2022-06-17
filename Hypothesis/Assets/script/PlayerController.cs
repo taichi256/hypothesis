@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,10 +46,12 @@ public class PlayerController : MonoBehaviour
 
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
+    private CinemachineVirtualCamera mainCameraCinema;
     private bool rotateCameraForward;
     public bool onInvisibleWall;
     public bool rightCamera;
     private bool upCamera;
+    public bool fall;
     mainCameraScript mainCameraScript;
 
     float firstPosX;
@@ -57,6 +60,9 @@ public class PlayerController : MonoBehaviour
     float firstCamPosY;
 
     Vector3 vec;
+
+    public Transform follow;
+    private int _currentTarget = 0;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
@@ -78,6 +84,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("CM vcam1");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
+        mainCameraCinema = mainCamera.GetComponent<CinemachineVirtualCamera>();
         firstPosX = this.transform.position.x;
         firstPosY = this.transform.position.y;
         firstCamPosX = mainCamera.transform.position.x;
@@ -228,11 +235,6 @@ public class PlayerController : MonoBehaviour
         /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
         vec = direction * CameraSpeed() * Time.deltaTime;
         Debug.Log(CameraRelativeRotation());*/
-    }
-
-    void LateUpdate()
-    {
-        //mainCameraRb.velocity = new Vector2(vec.x, vec.y);
         if (CameraRelativePosition().x >= -1)
         {
             rightCamera = true;
@@ -241,25 +243,14 @@ public class PlayerController : MonoBehaviour
         {
             rightCamera = false;
         }
-        if (CameraRelativePosition().y >= 1)
-        {
-            upCamera = true;
-        }
-        if (CameraRelativePosition().y <= 0.5)
-        {
-            upCamera = false;
-        }
-        if (rightCamera && !upCamera)
+    }
+
+    void LateUpdate()
+    {
+        //mainCameraRb.velocity = new Vector2(vec.x, vec.y);
+        if (rightCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
-        }
-        if (upCamera && !rightCamera)
-        {
-            mainCameraRb.velocity = new Vector2(0, rbody.velocity.y);
-        }
-        if (rightCamera && upCamera)
-        {
-            mainCameraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
         }
     }
 
@@ -298,6 +289,14 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector2(firstPosX,firstPosY);
             mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
         }
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            mainCameraCinema.Follow = null;
+        }
+        if(collision.gameObject.CompareTag("SkyGround"))
+        {
+            mainCameraCinema.Follow = this.transform;
+        }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
@@ -310,6 +309,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
 
     void OkCamera()
     {
