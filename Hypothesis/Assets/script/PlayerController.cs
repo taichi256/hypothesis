@@ -63,6 +63,9 @@ public class PlayerController : MonoBehaviour
 
     public Transform follow;
     private int _currentTarget = 0;
+    public bool onUpWall;
+    private float playerSpeedX;
+    private float playerSpeedY;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
@@ -81,7 +84,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
-        mainCamera = GameObject.Find("CM vcam1");
+        mainCamera = GameObject.Find("Main Camera");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
         mainCameraCinema = mainCamera.GetComponent<CinemachineVirtualCamera>();
@@ -243,14 +246,32 @@ public class PlayerController : MonoBehaviour
         {
             rightCamera = false;
         }
+        if(!onUpWall)
+        {
+            upCamera = false;
+        }
+        if(onUpWall)
+        {
+            upCamera = true;
+        }
+        playerSpeedX = rbody.velocity.x;
+        playerSpeedY = rbody.velocity.y;
     }
 
     void LateUpdate()
     {
         //mainCameraRb.velocity = new Vector2(vec.x, vec.y);
-        if (rightCamera)
+        if (rightCamera && !upCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
+        }
+        if (upCamera && !rightCamera)
+        {
+            mainCameraRb.velocity = new Vector2(0, rbody.velocity.y);
+        }
+        if (rightCamera && upCamera)
+        {
+            mainCameraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
         }
     }
 
@@ -289,13 +310,23 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector2(firstPosX,firstPosY);
             mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
         }
-        if(collision.gameObject.CompareTag("Ground"))
-        {
-            mainCameraCinema.Follow = null;
-        }
-        if(collision.gameObject.CompareTag("SkyGround"))
+        /*if(collision.gameObject.CompareTag("SkyGround"))
         {
             mainCameraCinema.Follow = this.transform;
+        }*/
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("upWall"))
+        {
+            onUpWall = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("upWall"))
+        {
+            onUpWall = false;
         }
     }
     void OnCollisionExit2D(Collision2D collision)
