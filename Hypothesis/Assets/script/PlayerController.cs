@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -46,7 +45,6 @@ public class PlayerController : MonoBehaviour
 
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
-    private CinemachineVirtualCamera mainCameraCinema;
     private bool rotateCameraForward;
     public bool onInvisibleWall;
     public bool rightCamera;
@@ -64,8 +62,7 @@ public class PlayerController : MonoBehaviour
     public Transform follow;
     private int _currentTarget = 0;
     public bool onUpWall;
-    private float playerSpeedX;
-    private float playerSpeedY;
+    public bool outOfUpWall;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
@@ -87,7 +84,6 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("Main Camera");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
-        mainCameraCinema = mainCamera.GetComponent<CinemachineVirtualCamera>();
         firstPosX = this.transform.position.x;
         firstPosY = this.transform.position.y;
         firstCamPosX = mainCamera.transform.position.x;
@@ -236,17 +232,17 @@ public class PlayerController : MonoBehaviour
         }
         //カメラの処理かな
         /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
-        vec = direction * CameraSpeed() * Time.deltaTime;
-        Debug.Log(CameraRelativeRotation());*/
-        if (CameraRelativePosition().x >= -1)
+        vec = direction * CameraSpeed() * Time.deltaTime;*/
+        /*if (CameraRelativePosition().x >= -1 && CameraRelativePosition().x <= 1)
         {
             rightCamera = true;
+            mainCameraScript.onInvisibleWall = false;
         }
-        if (CameraRelativePosition().x <= -2)
+        if (mainCameraScript.onInvisibleWall &&)
         {
             rightCamera = false;
-        }
-        if(!onUpWall)
+        }*/
+        if (outOfUpWall && onGround)
         {
             upCamera = false;
         }
@@ -254,14 +250,20 @@ public class PlayerController : MonoBehaviour
         {
             upCamera = true;
         }
-        playerSpeedX = rbody.velocity.x;
-        playerSpeedY = rbody.velocity.y;
     }
 
     void LateUpdate()
     {
-        //mainCameraRb.velocity = new Vector2(vec.x, vec.y);
-        if (rightCamera && !upCamera)
+        if (upCamera)
+        {
+            mainCameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
+        }
+        else
+        {
+            mainCameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
+        }
+        Debug.Log(speedFunctionX());
+        /*if (rightCamera && !upCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
         }
@@ -272,7 +274,7 @@ public class PlayerController : MonoBehaviour
         if (rightCamera && upCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
-        }
+        }*/
     }
 
     void dushEnd()
@@ -320,12 +322,14 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("upWall"))
         {
             onUpWall = true;
+            outOfUpWall = false;
         }
     }
     void OnTriggerExit2D(Collider2D other)
     {
         if(other.gameObject.CompareTag("upWall"))
         {
+            outOfUpWall = true;
             onUpWall = false;
         }
     }
@@ -347,10 +351,17 @@ public class PlayerController : MonoBehaviour
         rightCamera = true;
     }
 
-    private Vector2 CameraRelativePosition()
+    private float CameraRelativePositionX()
     {
         
-        var relativePos = transform.position - mainCamera.transform.position;
+        float relativePos = transform.position.x - mainCamera.transform.position.x;
+
+        return relativePos;
+    }
+
+    private float CameraRelativePositionY()
+    {
+        float relativePos = transform.position.y - mainCamera.transform.position.y + 5;
 
         return relativePos;
     }
@@ -412,16 +423,41 @@ public class PlayerController : MonoBehaviour
 
     float CameraRelativeRotation()
     {
-        float rad = Mathf.Atan2(CameraRelativePosition().x, CameraRelativePosition().y);
+        float rad = Mathf.Atan2(CameraRelativePositionX(), CameraRelativePositionY());
         float degree = rad * Mathf.Rad2Deg;
 
         return degree;
     }
 
-    float CameraSpeed()
+    float speedFunctionX()
     {
-        float speed = Mathf.Pow(Mathf.Sqrt(Mathf.Pow(CameraRelativePosition().x, 2f) + Mathf.Pow(CameraRelativePosition().y, 2f)), 2f) * 10;
+        float symbol = Mathf.Abs(CameraRelativePositionX()) / CameraRelativePositionX();
+        float speed = Mathf.Pow(CameraRelativePositionX(), 2f);
+        speed = speed * symbol;
 
-        return speed;
+        if(Mathf.Abs(speed) > 0.00000001f)
+        {
+            return speed;
+        }
+        else
+        {
+            return 0f;
+        }      
+    }
+
+    float speedFunctionY()
+    {
+        float symbol = Mathf.Abs(CameraRelativePositionY()) / CameraRelativePositionY();
+        float speed = Mathf.Pow(Mathf.Abs(CameraRelativePositionY()), 2f);
+        speed = speed * symbol;
+
+        if (Mathf.Abs(speed) > 0.00000001f)
+        {
+            return speed;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 }
