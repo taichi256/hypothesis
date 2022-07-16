@@ -64,6 +64,8 @@ public class PlayerController : MonoBehaviour
     public bool onUpWall;
     public bool outOfUpWall;
 
+    public Animator anim;
+
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
         {Movement.AirJump,1},
@@ -95,8 +97,11 @@ public class PlayerController : MonoBehaviour
         //方向キーで左右移動、ジャンプをスペースキー
         //ダブルジャンプはNキー、ダッシュはBキー
         Direction = Input.GetAxisRaw("Horizontal");
-        if (Direction > 0) GoRight();
-        if (Direction < 0) GoLeft();
+        Vector3 scale = transform.localScale;
+        if (Direction > 0) { GoRight(); anim.SetTrigger("Walk"); scale.x = 1; }
+        if (Direction < 0){GoLeft(); anim.SetTrigger("Walk"); scale.x = -1; }
+        transform.localScale = scale;
+        if (Direction == 0)anim.SetTrigger("OffWalk");
         
         if (Input.GetButtonDown("Jump"))
         {
@@ -114,11 +119,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
         onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
         if (onGround)
         {
-           movRest[Movement.Grab] = mov[Movement.Grab];
+            anim.SetTrigger("OffJump");
+            movRest[Movement.Grab] = mov[Movement.Grab];
             movRest[Movement.Dush] = mov[Movement.Dush];
             movRest[Movement.AirJump] = mov[Movement.AirJump];
             notOnGroundSpeed = 0.0f;
@@ -127,8 +132,7 @@ public class PlayerController : MonoBehaviour
                 rbody.velocity = new Vector2(speed, rbody.velocity.y);
                 goRight = false;
                 lastDirection = true;
-            }
-            if (goLeft)
+            }else if (goLeft)
             {
                 rbody.velocity = new Vector2(-1 * speed, rbody.velocity.y);
                 goLeft = false;
@@ -262,7 +266,6 @@ public class PlayerController : MonoBehaviour
         {
             mainCameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
         }
-        Debug.Log(speedFunctionX());
         /*if (rightCamera && !upCamera)
         {
             mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
@@ -298,7 +301,6 @@ public class PlayerController : MonoBehaviour
         }
         if (transform.parent == null && collision.gameObject.CompareTag("move block")&& fixedUpdateRecorder == 0)
         {
-            Debug.Log("adada");
             Vector2 hitPos = collision.contacts[0].point;
             if (hitPos.y <= rbody.transform.position.y)
             {
@@ -372,6 +374,7 @@ public class PlayerController : MonoBehaviour
         public void Jump()
     {
         if (check(Movement.NoMovement) == false) return;
+        anim.SetTrigger("Jump");
         goJump = true;
     }
     public void AirJump()
