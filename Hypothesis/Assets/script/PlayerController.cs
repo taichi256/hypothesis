@@ -64,6 +64,10 @@ public class PlayerController : MonoBehaviour
     public bool onUpWall;
     public bool outOfUpWall;
 
+    int AttackTimeRecord = 0;
+    public int AttackTimeMax = 100;
+    bool goAttack = false;
+
     public Animator anim;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
@@ -98,8 +102,8 @@ public class PlayerController : MonoBehaviour
         //ダブルジャンプはNキー、ダッシュはBキー
         Direction = Input.GetAxisRaw("Horizontal");
         Vector3 scale = transform.localScale;
-        if (Direction > 0) { GoRight(); anim.SetTrigger("Walk"); scale.x = 1; }
-        if (Direction < 0){GoLeft(); anim.SetTrigger("Walk"); scale.x = -1; }
+        if (Direction > 0) { GoRight(); anim.SetTrigger("Walk"); if (scale.x < 0) { scale.x = -scale.x; } }
+        if (Direction < 0){GoLeft(); anim.SetTrigger("Walk"); if (scale.x > 0) { scale.x = -scale.x; } }
         transform.localScale = scale;
         if (Direction == 0)anim.SetTrigger("OffWalk");
         
@@ -114,6 +118,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Dush"))
         {
             Dush();
+        }
+        if(Input.GetButtonDown("Attack"))
+        {
+            Attack();
         }
     }
 
@@ -165,6 +173,10 @@ public class PlayerController : MonoBehaviour
             if(goAirJump && !onGround)
             {
                 rbody.velocity=new Vector2(rbody.velocity.x, 0);
+            }
+            else
+            {
+                anim.ResetTrigger("OffJump");
             }
             Vector2 jumpPw = new Vector2(0, 0); ;
             if (goJump) jumpPw = new Vector2(0, jump);
@@ -398,7 +410,13 @@ public class PlayerController : MonoBehaviour
         if (lastDushRecord != 0) return;
         goDush = true;
     }
-
+    public void Attack()
+    {
+        if (check(Movement.Dush) == false) return;
+        goAttack = true;
+        anim.SetTrigger("Attack");
+        AttackTimeRecord = 1;
+    }
     bool check(Movement thisMov)
     {
         if (thisMov != Movement.NoMovement && movRest[thisMov]==0) { return false; }
