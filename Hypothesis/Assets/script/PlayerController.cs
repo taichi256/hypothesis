@@ -22,6 +22,16 @@ public class PlayerController : MonoBehaviour
     bool goDush = false;
     int dushDirection = 0;
 
+    //アビリティ回数上限の設定
+    public int AirJumpLimit = 0;
+    public int DashLimit = 0;
+    public int GrappleLimit = 0;
+
+    //アビリティ発生状況ののカウンタ
+    public int AirJumpCount = 0;
+    public int DashCount = 0;
+    public int GrappleCount = 0;
+
     //fixeUpdateRecorderはdush時のフレームを記録するためのint型の変数です
     int fixedUpdateRecorder =0;
     public int dushDecelerateTiming = 50;
@@ -111,11 +121,11 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
-        if (Input.GetButtonDown("AirJump"))
+        if (Input.GetButtonDown("AirJump") && (AirJumpCount > 0))
         {
             AirJump();
         }
-        if (Input.GetButtonDown("Dush"))
+        if (Input.GetButtonDown("Dush") && (DashCount > 0))
         {
             Dush();
         }
@@ -168,9 +178,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         //ジャンプの処理
-        if (onGround && goJump || goAirJump && !onGround)
+        if ((onGround && goJump) || (goAirJump && !onGround))
         {
-            if(goAirJump && !onGround)
+            if (goAirJump && !onGround)
             {
                 rbody.velocity=new Vector2(rbody.velocity.x, 0);
             }
@@ -246,6 +256,17 @@ public class PlayerController : MonoBehaviour
             else if (lastDushRecord == 1 + dushCooltime) { lastDushRecord = 0; }
             else { lastDushRecord++; }
         }
+
+        //設置時のアビリティカウンタのリセット
+        if (onGround == true)
+        {
+            AirJumpCount = AirJumpLimit;
+            DashCount = DashLimit;
+            GrappleCount = GrappleLimit;
+            Debug.Log("AbilityCounter:Reset");
+        }
+
+
         //カメラの処理かな
         /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
         vec = direction * CameraSpeed() * Time.deltaTime;*/

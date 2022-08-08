@@ -58,9 +58,9 @@
   <ItemGroup>
     <Compile Include="Assets\script\mainCameraScript.cs" />
     <Compile Include="Assets\script\PlayerController.cs" />
+    <Compile Include="Assets\QMMaterial\Components\QMmaster.cs" />
     <Compile Include="Assets\script\inVisibleWallScript.cs" />
     <Compile Include="Assets\QMMaterial\Components\AbilityCount.cs" />
-    <Compile Include="Assets\QMMaterial\Components\QMmaster.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
