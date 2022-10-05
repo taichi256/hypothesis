@@ -377,6 +377,7 @@
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/UnityEngine.UI.ref.dll"
 "Assets/QMMaterial/Components/AbilityCount.cs"
 "Assets/QMMaterial/Components/QMmaster.cs"
+"Assets/QMSelector.cs"
 "Assets/script/inVisibleWallScript.cs"
 "Assets/script/mainCameraScript.cs"
 "Assets/script/PlayerController.cs"
