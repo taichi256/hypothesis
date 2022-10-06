@@ -12,6 +12,7 @@ TagManager:
   - invisibleWall
   - upWall
   - Ground
+  - Attack
   layers:
   - Default
   - TransparentFX

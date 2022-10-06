@@ -23,9 +23,9 @@ public class PlayerController : MonoBehaviour
     int dushDirection = 0;
 
     //アビリティ回数上限の設定
-    public int AirJumpLimit = 0;
-    public int DashLimit = 0;
-    public int GrappleLimit = 0;
+    public int AirJumpLimit = 1;
+    public int DashLimit = 1;
+    public int GrappleLimit = 1;
 
     //アビリティ発生状況ののカウンタ
     public int AirJumpCount = 0;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public int GrappleCount = 0;
 
     //fixeUpdateRecorderはdush時のフレームを記録するためのint型の変数です
-    int fixedUpdateRecorder =0;
+    public int fixedUpdateRecorder =0;
     public int dushDecelerateTiming = 50;
     public int dushOnGravityTiming = 60;
     public int dushEndTiming = 80;
@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
     public int AttackTimeMax = 100;
     bool goAttack = false;
 
+    public string playerTag = "Player";
+    public string attackTag = "Attack";
     public Animator anim;
 
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
@@ -265,7 +267,16 @@ public class PlayerController : MonoBehaviour
             GrappleCount = GrappleLimit;
             Debug.Log("AbilityCounter:Reset");
         }
-
+        if (AttackTimeRecord != 0)
+        {
+            AttackTimeRecord++;
+            if (AttackTimeMax+1 == AttackTimeRecord)
+            {
+                AttackTimeRecord = 0;
+                rbody.gravityScale = gravityScaleRecord;
+                gameObject.tag = playerTag;
+            }
+        }
 
         //カメラの処理かな
         /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
@@ -436,10 +447,15 @@ public class PlayerController : MonoBehaviour
         if (check(Movement.Dush) == false) return;
         goAttack = true;
         anim.SetTrigger("Attack");
+        gravityScaleRecord = rbody.gravityScale;
+        rbody.gravityScale = 0;
         AttackTimeRecord = 1;
+        rbody.velocity = new Vector2(0,0);
+        gameObject.tag = attackTag;
     }
     bool check(Movement thisMov)
     {
+        if (AttackTimeRecord != 0)return false;
         if (thisMov != Movement.NoMovement && movRest[thisMov]==0) { return false; }
         else if(thisMov!=Movement.NoMovement){ movRest[thisMov] -= 1; }
         if (grab == true)

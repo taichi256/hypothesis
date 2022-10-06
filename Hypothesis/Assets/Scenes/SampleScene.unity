@@ -2595,7 +2595,7 @@ GameObject:
   - component: {fileID: 1487654005}
   m_Layer: 0
   m_Name: robo
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2724,15 +2724,16 @@ MonoBehaviour:
   speed: 7
   notOnGroundAcceleration: 0.2
   notOnGroundSpeed: 0
-  AirJumpLimit: 0
-  DashLimit: 0
-  GrappleLimit: 0
+  AirJumpLimit: 1
+  DashLimit: 1
+  GrappleLimit: 1
   AirJumpCount: 0
   DashCount: 0
   GrappleCount: 0
-  dushDecelerateTiming: 10
-  dushOnGravityTiming: 15
-  dushEndTiming: 25
+  fixedUpdateRecorder: 0
+  dushDecelerateTiming: 30
+  dushOnGravityTiming: 40
+  dushEndTiming: 50
   startDushSpeed: 20
   dushAcceleration: 1
   dushCooltime: 40
@@ -2744,6 +2745,8 @@ MonoBehaviour:
   onUpWall: 0
   outOfUpWall: 0
   AttackTimeMax: 100
+  playerTag: Player
+  attackTag: Attack
   anim: {fileID: 1487654005}
 --- !u!95 &1487654005
 Animator:
