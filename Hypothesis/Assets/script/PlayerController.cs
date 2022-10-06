@@ -74,8 +74,9 @@ public class PlayerController : MonoBehaviour
     public bool onUpWall;
     public bool outOfUpWall;
 
-    int AttackTimeRecord = 0;
-    public int AttackTimeMax = 100;
+    int attackTimeRecord = 0;
+    public int attackTimeMax = 100;
+    public int attackDamageTiming = 50;
     bool goAttack = false;
 
     public string playerTag = "Player";
@@ -267,12 +268,18 @@ public class PlayerController : MonoBehaviour
             GrappleCount = GrappleLimit;
             Debug.Log("AbilityCounter:Reset");
         }
-        if (AttackTimeRecord != 0)
+        if (attackTimeRecord != 0)
         {
-            AttackTimeRecord++;
-            if (AttackTimeMax+1 == AttackTimeRecord)
+            attackTimeRecord++;
+            if (attackTimeRecord == attackDamageTiming+1)
             {
-                AttackTimeRecord = 0;
+                gameObject.tag = attackTag;
+            }else if (attackTimeRecord == attackDamageTiming + 2)
+            {
+                gameObject.tag = playerTag;
+            }else if (attackTimeMax+1 == attackTimeRecord)
+            {
+                attackTimeRecord = 0;
                 rbody.gravityScale = gravityScaleRecord;
                 gameObject.tag = playerTag;
             }
@@ -449,13 +456,12 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("Attack");
         gravityScaleRecord = rbody.gravityScale;
         rbody.gravityScale = 0;
-        AttackTimeRecord = 1;
+        attackTimeRecord = 1;
         rbody.velocity = new Vector2(0,0);
-        gameObject.tag = attackTag;
     }
     bool check(Movement thisMov)
     {
-        if (AttackTimeRecord != 0)return false;
+        if (attackTimeRecord != 0)return false;
         if (thisMov != Movement.NoMovement && movRest[thisMov]==0) { return false; }
         else if(thisMov!=Movement.NoMovement){ movRest[thisMov] -= 1; }
         if (grab == true)
