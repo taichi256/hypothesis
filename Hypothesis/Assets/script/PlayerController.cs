@@ -56,9 +56,6 @@ public class PlayerController : MonoBehaviour
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
     private bool rotateCameraForward;
-    public bool onInvisibleWall;
-    public bool rightCamera;
-    private bool upCamera;
     public bool fall;
     mainCameraScript mainCameraScript;
 
@@ -66,13 +63,13 @@ public class PlayerController : MonoBehaviour
     float firstPosY;
     float firstCamPosX;
     float firstCamPosY;
+    public bool upCamera=false;
+    private bool onUpWall=false;
 
     Vector3 vec;
 
     public Transform follow;
     private int _currentTarget = 0;
-    public bool onUpWall;
-    public bool outOfUpWall;
 
     int attackTimeRecord = 0;
     public int attackTimeMax = 100;
@@ -107,6 +104,7 @@ public class PlayerController : MonoBehaviour
         firstPosY = this.transform.position.y;
         firstCamPosX = mainCamera.transform.position.x;
         firstCamPosY = mainCamera.transform.position.y;
+        upCamera=false;
     }
 
     void Update()
@@ -136,6 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
+    
     }
 
     void FixedUpdate()
@@ -284,52 +283,22 @@ public class PlayerController : MonoBehaviour
                 gameObject.tag = playerTag;
             }
         }
-
-        //カメラの処理かな
-        /*Vector3 direction = new Vector3(Mathf.Sin(CameraRelativeRotation()), Mathf.Cos(CameraRelativeRotation()), 0);
-        vec = direction * CameraSpeed() * Time.deltaTime;*/
-        /*if (CameraRelativePosition().x >= -1 && CameraRelativePosition().x <= 1)
-        {
-            rightCamera = true;
-            mainCameraScript.onInvisibleWall = false;
-        }
-        if (mainCameraScript.onInvisibleWall &&)
-        {
-            rightCamera = false;
-        }*/
-        if (outOfUpWall && onGround)
-        {
-            upCamera = false;
-        }
-        if(onUpWall)
-        {
-            upCamera = true;
-        }
     }
 
     void LateUpdate()
     {
-        if (upCamera)
+        if (!onUpWall && onGround && mainCameraScript.finishedMove)
         {
-            mainCameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
+            upCamera = false;
         }
-        else
+        if (onUpWall)
         {
-            mainCameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
+            upCamera = true;
+            mainCameraScript.finishedMove = false;
         }
-        /*if (rightCamera && !upCamera)
-        {
-            mainCameraRb.velocity = new Vector2(rbody.velocity.x, 0);
-        }
-        if (upCamera && !rightCamera)
-        {
-            mainCameraRb.velocity = new Vector2(0, rbody.velocity.y);
-        }
-        if (rightCamera && upCamera)
-        {
-            mainCameraRb.velocity = new Vector2(rbody.velocity.x, rbody.velocity.y);
-        }*/
     }
+
+
 
     void dushEnd()
     {
@@ -365,27 +334,8 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector2(firstPosX,firstPosY);
             mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
         }
-        /*if(collision.gameObject.CompareTag("SkyGround"))
-        {
-            mainCameraCinema.Follow = this.transform;
-        }*/
     }
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("upWall"))
-        {
-            onUpWall = true;
-            outOfUpWall = false;
-        }
-    }
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("upWall"))
-        {
-            outOfUpWall = true;
-            onUpWall = false;
-        }
-    }
+
     void OnCollisionExit2D(Collision2D collision)
     {
         if (transform.parent != null && collision.gameObject.CompareTag("move block"))
@@ -396,12 +346,6 @@ public class PlayerController : MonoBehaviour
                 transform.parent = null;
             }
         }
-    }
-
-
-    void OkCamera()
-    {
-        rightCamera = true;
     }
 
     private float CameraRelativePositionX()
@@ -493,35 +437,19 @@ public class PlayerController : MonoBehaviour
         return degree;
     }
 
-    float speedFunctionX()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        float symbol = Mathf.Abs(CameraRelativePositionX()) / CameraRelativePositionX();
-        float speed = Mathf.Pow(CameraRelativePositionX(), 2f);
-        speed = speed * symbol;
-
-        if(Mathf.Abs(speed) > 0.00000001f)
+        if(other.gameObject.CompareTag("upWall"))
         {
-            return speed;
+            onUpWall = true;
         }
-        else
-        {
-            return 0f;
-        }      
     }
 
-    float speedFunctionY()
+    void OnTriggerExit2D(Collider2D other)
     {
-        float symbol = Mathf.Abs(CameraRelativePositionY()) / CameraRelativePositionY();
-        float speed = Mathf.Pow(Mathf.Abs(CameraRelativePositionY()), 2f);
-        speed = speed * symbol;
-
-        if (Mathf.Abs(speed) > 0.00000001f)
+        if(other.gameObject.CompareTag("upWall"))
         {
-            return speed;
-        }
-        else
-        {
-            return 0f;
+            onUpWall = false;
         }
     }
 }
