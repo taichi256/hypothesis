@@ -3310,7 +3310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5810235536403415166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3797,7 +3797,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 316774733327345419}
+  Camera: {fileID: 519420028}
   robocontroller: {fileID: 1487654004}
+  APanel: {fileID: 5810235537348217405}
+  MPanel: {fileID: 5810235536993775041}
+  TPanel: {fileID: 5810235537083539145}
+  EDPanel: {fileID: 5810235536389464771}
+  AIco: {fileID: 5810235537158586383}
+  MIco: {fileID: 5810235537451744738}
+  TIco: {fileID: 5810235537408632741}
+  EDIco: {fileID: 5810235536403415165}
 --- !u!114 &5810235537190675201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3886,7 +3895,7 @@ GameObject:
   - component: {fileID: 5810235537348217404}
   - component: {fileID: 5810235537348217402}
   - component: {fileID: 5810235537348217406}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: AbilityPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3960,7 +3969,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5810235537408632742
 MonoBehaviour:
   m_ObjectHideFlags: 0
