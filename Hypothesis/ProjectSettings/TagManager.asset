@@ -50,3 +50,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: QM
+    uniqueID: 2312423641
+    locked: 0

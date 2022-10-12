@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AbilityCount : MonoBehaviour
 {
-    public int AbilityLimit = 1;
+    public int AbilityLimit = 3;
     //set limit of all of Ability
 
     public int AJLimit = 0;
@@ -12,14 +12,29 @@ public class AbilityCount : MonoBehaviour
     public int GrappleLimit = 0;
     //set limit of Ability
 
-    void Start()
+    public void ClickAJ()
     {
-        
+        int AC = AJLimit + DashLimit + GrappleLimit;
+        if (AbilityLimit>AC)
+        {
+            AJLimit++;
+        }
+    }
+    public void ClickD()
+    {
+        int AC = AJLimit + DashLimit + GrappleLimit;
+        if (AbilityLimit > AC)
+        {
+            DashLimit++;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ClickG()
     {
-        
+        int AC = AJLimit + DashLimit + GrappleLimit;
+        if (AbilityLimit > AC)
+        {
+            GrappleLimit++;
+        }
     }
 }
