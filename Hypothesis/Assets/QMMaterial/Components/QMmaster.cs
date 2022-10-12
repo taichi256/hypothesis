@@ -70,13 +70,18 @@ public class QMmaster : MonoBehaviour
 
             Vector2 IcosY = Cam.position;
             IcosY.y += 6;
+            Vector2 Wider = new (2f, 0f);
 
-            AIT.position = IcosY;
-            MIT.position = IcosY;
-            TIT.position = IcosY;
-            EDIT.position = IcosY;
 
-            AIco.transform.localScale = Vector3.one*0.1f;
+            AIT.position = IcosY + Wider*2;
+            MIT.position = IcosY- Wider*2;
+            TIT.position = IcosY+Wider;
+            EDIT.position = IcosY-Wider;
+
+            AIco.transform.localScale = Vector2.one*0.5f;
+            MIco.transform.localScale = Vector2.one * 0.5f;
+            TIco.transform.localScale = Vector2.one * 0.5f;
+            EDIco.transform.localScale = Vector2.one * 0.5f;
         }
 
     }

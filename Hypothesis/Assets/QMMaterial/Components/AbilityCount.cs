@@ -37,4 +37,11 @@ public class AbilityCount : MonoBehaviour
             GrappleLimit++;
         }
     }
+
+    public void Reset()
+    {
+        AJLimit = 0;
+        DashLimit = 0;
+        GrappleLimit = 0;
+    }
 }
