@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
+    public GameObject talk;
+    private GameObject another;
     private bool rotateCameraForward;
     public bool fall;
     mainCameraScript mainCameraScript;
@@ -80,6 +82,8 @@ public class PlayerController : MonoBehaviour
     public string attackTag = "Attack";
     public Animator anim;
 
+    public bool inTalkBox = false;
+
     public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
         {Movement.AirJump,1},
@@ -100,6 +104,7 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("Main Camera");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
+        talk = GameObject.Find("Talk");
         firstPosX = this.transform.position.x;
         firstPosY = this.transform.position.y;
         firstCamPosX = mainCamera.transform.position.x;
@@ -265,7 +270,7 @@ public class PlayerController : MonoBehaviour
             AirJumpCount = AirJumpLimit;
             DashCount = DashLimit;
             GrappleCount = GrappleLimit;
-            Debug.Log("AbilityCounter:Reset");
+            //Debug.Log("AbilityCounter:Reset");
         }
         if (attackTimeRecord != 0)
         {
@@ -443,6 +448,12 @@ public class PlayerController : MonoBehaviour
         {
             onUpWall = true;
         }
+        if(other.gameObject.CompareTag("Talk"))
+        {
+            inTalkBox = true;
+            another = other.transform.parent.gameObject;
+            talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -450,6 +461,12 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("upWall"))
         {
             onUpWall = false;
+        }
+        if(other.gameObject.CompareTag("Talk"))
+        {
+            inTalkBox = false;
+            another = other.transform.parent.gameObject;
+            talk.transform.position = new Vector3(1000, 1000, another.transform.position.z);
         }
     }
 }

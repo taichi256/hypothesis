@@ -13,6 +13,7 @@ TagManager:
   - upWall
   - Ground
   - Attack
+  - Talk
   layers:
   - Default
   - TransparentFX

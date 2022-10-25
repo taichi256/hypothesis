@@ -14,6 +14,9 @@ public class mainCameraScript : MonoBehaviour
     public bool finishedMove;
     PlayerController playerScript;
     public float finishedPos;
+    public bool talking = false;
+    public bool talkOnce = false;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +29,15 @@ public class mainCameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Return) && playerScript.inTalkBox && !talkOnce)
+        {
+            StartCoroutine("MoveTalking");
+        }
     }
 
     void LateUpdate()
     {
-        if (playerScript.upCamera)
+        if (playerScript.upCamera && !talking)
         {
             maincameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
         }
@@ -92,7 +98,33 @@ public class mainCameraScript : MonoBehaviour
         }
     }
 
-    
+    private IEnumerator MoveTalking()
+    {
+        talkOnce = true;
+        talking = true;
+        playerScript.talk.SetActive(false);
+        playerScript.enabled = false;
 
+        for(int i=0; i<20; i++)
+        {
+            transform.Translate(0, -0.1f, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+
+        yield return new WaitForSeconds(3);
+
+        talking = false;
+        talkOnce = false;
+
+        for(int i=0; i<20; i++)
+        {
+            transform.Translate(0, 0.1f, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        playerScript.talk.SetActive(true);
+        playerScript.enabled = true;
+    }
 
 }
