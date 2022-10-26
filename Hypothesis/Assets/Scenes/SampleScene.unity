@@ -3355,12 +3355,9 @@ MonoBehaviour:
   speed: 7
   notOnGroundAcceleration: 0.2
   notOnGroundSpeed: 0
-  AirJumpLimit: 1
-  DashLimit: 1
-  GrappleLimit: 1
-  AirJumpCount: 0
-  DashCount: 0
-  GrappleCount: 0
+  AirJumpLimit: 2
+  DashLimit: 2
+  GrappleLimit: 2
   fixedUpdateRecorder: 0
   dushDecelerateTiming: 30
   dushOnGravityTiming: 40

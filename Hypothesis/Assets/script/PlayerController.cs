@@ -27,10 +27,11 @@ public class PlayerController : MonoBehaviour
     public int DashLimit = 1;
     public int GrappleLimit = 1;
 
-    //アビリティ発生状況ののカウンタ
+    //未使用
+    /*//アビリティ発生状況ののカウンタ
     public int AirJumpCount = 0;
     public int DashCount = 0;
-    public int GrappleCount = 0;
+    public int GrappleCount = 0;*/
 
     //fixeUpdateRecorderはdush時のフレームを記録するためのint型の変数です
     public int fixedUpdateRecorder =0;
@@ -84,12 +85,13 @@ public class PlayerController : MonoBehaviour
 
     public bool inTalkBox = false;
 
-    public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
+    //未使用
+    /*public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
         {Movement.AirJump,1},
         {Movement.Dush,1},
         {Movement.Grab,1}
-    };
+    };*/
 
     public Dictionary<Movement,int> movRest= new Dictionary<Movement, int>()
     {
@@ -127,11 +129,11 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
-        if (Input.GetButtonDown("AirJump") && (AirJumpCount > 0))
+        if (Input.GetButtonDown("AirJump"))
         {
             AirJump();
         }
-        if (Input.GetButtonDown("Dush") && (DashCount > 0))
+        if (Input.GetButtonDown("Dush"))
         {
             Dush();
         }
@@ -148,9 +150,9 @@ public class PlayerController : MonoBehaviour
         if (onGround)
         {
             anim.SetTrigger("OffJump");
-            movRest[Movement.Grab] = mov[Movement.Grab];
-            movRest[Movement.Dush] = mov[Movement.Dush];
-            movRest[Movement.AirJump] = mov[Movement.AirJump];
+            movRest[Movement.Grab] = GrappleLimit;
+            movRest[Movement.Dush] = DashLimit;
+            movRest[Movement.AirJump] = AirJumpLimit;
             notOnGroundSpeed = 0.0f;
             if (goRight)
             {
@@ -265,13 +267,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //設置時のアビリティカウンタのリセット
-        if (onGround == true)
+        //動作~limit系の変数は使用していません。dictionaryのmovRestを使用する為ここはコメントアウトします。
+        /*if (onGround == true)
         {
             AirJumpCount = AirJumpLimit;
             DashCount = DashLimit;
             GrappleCount = GrappleLimit;
             //Debug.Log("AbilityCounter:Reset");
-        }
+        }*/
         if (attackTimeRecord != 0)
         {
             attackTimeRecord++;
@@ -317,7 +320,7 @@ public class PlayerController : MonoBehaviour
         {
             if (lastGrabRecord == 0)
             {
-                mov[Movement.Grab] -= 1;
+                movRest[Movement.Grab] -= 1;
                 lastGrabRecord++;
                 rbody.bodyType = RigidbodyType2D.Kinematic;
                 rbody.velocity = new Vector2(0, 0);
