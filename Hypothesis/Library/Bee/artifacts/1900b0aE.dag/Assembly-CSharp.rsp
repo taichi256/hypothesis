@@ -378,6 +378,8 @@
 "Assets/QMMaterial/Components/AbilityCount.cs"
 "Assets/QMMaterial/Components/QMmaster.cs"
 "Assets/QMSelector.cs"
+"Assets/script/Enemy.cs"
+"Assets/script/Enemy1.cs"
 "Assets/script/inVisibleWallScript.cs"
 "Assets/script/mainCameraScript.cs"
 "Assets/script/PlayerController.cs"

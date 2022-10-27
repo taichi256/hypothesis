@@ -406,8 +406,9 @@ public class PlayerController : MonoBehaviour
     }
     public void Attack()
     {
-        if (check(Movement.Dash) == false) return;
+        if (check(Movement.NoMovement) == false) return;
         goAttack = true;
+        Debug.Log("aaa");
         anim.SetTrigger("Attack");
         gravityScaleRecord = rbody.gravityScale;
         rbody.gravityScale = 0;
