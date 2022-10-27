@@ -22,11 +22,6 @@ public class PlayerController : MonoBehaviour
     bool goDush = false;
     int dushDirection = 0;
 
-    //アビリティ回数上限の設定
-    public int AirJumpLimit = 1;
-    public int DashLimit = 1;
-    public int GrappleLimit = 1;
-
     //未使用
     /*//アビリティ発生状況ののカウンタ
     public int AirJumpCount = 0;
@@ -85,18 +80,20 @@ public class PlayerController : MonoBehaviour
 
     public bool inTalkBox = false;
 
+    AbilityCount abilityCount;
+
     //未使用
     /*public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
     {
         {Movement.AirJump,1},
-        {Movement.Dush,1},
+        {Movement.Dash,1},
         {Movement.Grab,1}
     };*/
 
     public Dictionary<Movement,int> movRest= new Dictionary<Movement, int>()
     {
         {Movement.AirJump,0},
-        {Movement.Dush,0},
+        {Movement.Dash,0},
         {Movement.Grab,0}
     };
 
@@ -112,6 +109,12 @@ public class PlayerController : MonoBehaviour
         firstCamPosX = mainCamera.transform.position.x;
         firstCamPosY = mainCamera.transform.position.y;
         upCamera=false;
+
+        GameObject QM = GameObject.Find("Main Camera/QM");
+        GameObject QMPanel = QM.GetComponent<Transform>().transform.GetChild(0).gameObject;
+        GameObject abilityPanel= QMPanel.GetComponent<Transform>().transform.GetChild(0).gameObject;
+        GameObject abilityManager=abilityPanel.GetComponent<Transform>().transform.GetChild(0).gameObject;
+        abilityCount = (AbilityCount)(abilityManager.GetComponent<AbilityCount>());
     }
 
     void Update()
@@ -150,9 +153,9 @@ public class PlayerController : MonoBehaviour
         if (onGround)
         {
             anim.SetTrigger("OffJump");
-            movRest[Movement.Grab] = GrappleLimit;
-            movRest[Movement.Dush] = DashLimit;
-            movRest[Movement.AirJump] = AirJumpLimit;
+            movRest[Movement.Grab] = abilityCount.GrappleLimit;
+            movRest[Movement.Dash] = abilityCount.DashLimit;
+            movRest[Movement.AirJump] = abilityCount.AJLimit;
             notOnGroundSpeed = 0.0f;
             if (goRight)
             {
@@ -397,13 +400,13 @@ public class PlayerController : MonoBehaviour
     }
     public void Dush()
     {
-        if (check(Movement.Dush) == false) return;
+        if (check(Movement.Dash) == false) return;
         if (lastDushRecord != 0) return;
         goDush = true;
     }
     public void Attack()
     {
-        if (check(Movement.Dush) == false) return;
+        if (check(Movement.Dash) == false) return;
         goAttack = true;
         anim.SetTrigger("Attack");
         gravityScaleRecord = rbody.gravityScale;
@@ -434,7 +437,7 @@ public class PlayerController : MonoBehaviour
     public enum Movement
     {
         Grab = 1,
-        AirJump, Dush, NoMovement
+        AirJump, Dash, NoMovement
     }
 
     float CameraRelativeRotation()
