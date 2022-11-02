@@ -40,8 +40,11 @@
      <Compile Include="Assets/QMSelector.cs" />
      <Compile Include="Assets/script/PlayerController.cs" />
      <Compile Include="Assets/QMMaterial/Components/QMmaster.cs" />
+     <Compile Include="Assets/script/Enemy.cs" />
      <Compile Include="Assets/script/inVisibleWallScript.cs" />
+     <Compile Include="Assets/script/Enemy1.cs" />
      <Compile Include="Assets/QMMaterial/Components/AbilityCount.cs" />
+     <Compile Include="Assets/script/ButtonScript.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />

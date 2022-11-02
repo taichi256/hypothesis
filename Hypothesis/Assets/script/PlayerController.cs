@@ -104,10 +104,12 @@ public class PlayerController : MonoBehaviour
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
         talk = GameObject.Find("Talk");
-        firstPosX = this.transform.position.x;
-        firstPosY = this.transform.position.y;
-        firstCamPosX = mainCamera.transform.position.x;
-        firstCamPosY = mainCamera.transform.position.y;
+        this.transform.position = new Vector2(PlayerPrefs.GetFloat("PLAYERPOSX", -25), PlayerPrefs.GetFloat("PLAYERPOSY", -2));
+        mainCamera.transform.position = new Vector3(PlayerPrefs.GetFloat("CAMPOSX", -22), PlayerPrefs.GetFloat("CAMPOSY", 3), PlayerPrefs.GetFloat("CAMPOSZ", -10));
+        firstPosX = -25;
+        firstPosY = -2;
+        firstCamPosX = -22;
+        firstCamPosY = 3;
         upCamera=false;
 
         GameObject QM = GameObject.Find("Main Camera/QM");
@@ -115,6 +117,9 @@ public class PlayerController : MonoBehaviour
         GameObject abilityPanel= QMPanel.GetComponent<Transform>().transform.GetChild(0).gameObject;
         GameObject abilityManager=abilityPanel.GetComponent<Transform>().transform.GetChild(0).gameObject;
         abilityCount = (AbilityCount)(abilityManager.GetComponent<AbilityCount>());
+        abilityCount.AJLimit = PlayerPrefs.GetInt("AIRJUMP", 0);
+        abilityCount.DashLimit = PlayerPrefs.GetInt("DASH", 0);
+        abilityCount.GrappleLimit = PlayerPrefs.GetInt("GRAPPLE", 0);
     }
 
     void Update()
