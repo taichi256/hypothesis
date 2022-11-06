@@ -413,7 +413,6 @@ public class PlayerController : MonoBehaviour
     {
         if (check(Movement.NoMovement) == false) return;
         goAttack = true;
-        Debug.Log("aaa");
         anim.SetTrigger("Attack");
         gravityScaleRecord = rbody.gravityScale;
         rbody.gravityScale = 0;
