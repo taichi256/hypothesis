@@ -28,7 +28,7 @@ public class ButtonScript : MonoBehaviour
     public void ClickLoad()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(PlayerPrefs.GetString("STAGE", "Main"));
     }
 
     public void ClickNew()
@@ -60,6 +60,7 @@ public class ButtonScript : MonoBehaviour
         PlayerPrefs.SetInt("AIRJUMP", abilityCount.AJLimit);
         PlayerPrefs.SetInt("DASH", abilityCount.DashLimit);
         PlayerPrefs.SetInt("GRAPPLE", abilityCount.GrappleLimit);
+        PlayerPrefs.SetString("STAGE", SceneManager.GetActiveScene().name);
         save.gameObject.SetActive(true);
         yield return new WaitForSeconds(2);
         save.gameObject.SetActive(false);

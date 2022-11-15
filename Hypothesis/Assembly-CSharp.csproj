@@ -37,16 +37,22 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets/script/mainCameraScript.cs" />
+     <Compile Include="Assets/script/ButtonScript.cs" />
+     <Compile Include="Assets/script/Enemies/GunMan.cs" />
      <Compile Include="Assets/QMSelector.cs" />
      <Compile Include="Assets/script/PlayerController.cs" />
      <Compile Include="Assets/QMMaterial/Components/QMmaster.cs" />
-     <Compile Include="Assets/script/Enemy.cs" />
+     <Compile Include="Assets/script/Enemies/MoveForwardEnemy.cs" />
+     <Compile Include="Assets/script/Enemies/Enemy.cs" />
      <Compile Include="Assets/script/inVisibleWallScript.cs" />
-     <Compile Include="Assets/script/Enemy1.cs" />
+     <Compile Include="Assets/script/Enemies/Enemy1.cs" />
      <Compile Include="Assets/QMMaterial/Components/AbilityCount.cs" />
-     <Compile Include="Assets/script/ButtonScript.cs" />
+     <Compile Include="Assets/Simple Scene Fade Load System/Demo (You don&apos;t have to import this folder)/DemoScript.cs" />
+     <Compile Include="Assets/Simple Scene Fade Load System/Scripts/Fader.cs" />
+     <Compile Include="Assets/Simple Scene Fade Load System/Scripts/Initiate.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets/Simple Scene Fade Load System/ReadMeFirst.txt" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader" />

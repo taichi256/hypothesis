@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -464,6 +465,14 @@ public class PlayerController : MonoBehaviour
             inTalkBox = true;
             another = other.transform.parent.gameObject;
             talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
+        }
+        if(other.gameObject.CompareTag("SceneChanger"))
+        {
+            if(SceneManager.GetActiveScene().name=="Main")
+            {
+                Initiate.Fade("Stage2", Color.black, 2.0f);
+            }
+            
         }
     }
 
