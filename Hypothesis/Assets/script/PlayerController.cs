@@ -466,7 +466,7 @@ public class PlayerController : MonoBehaviour
             another = other.transform.parent.gameObject;
             talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
-        if(other.gameObject.CompareTag("SceneChanger"))
+        if(other.gameObject.CompareTag("sceneChanger"))
         {
             if(SceneManager.GetActiveScene().name=="Main")
             {

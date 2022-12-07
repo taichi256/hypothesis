@@ -16,6 +16,14 @@ public class mainCameraScript : MonoBehaviour
     public float finishedPos;
     public bool talking = false;
     public bool talkOnce = false;
+    [SerializeField]
+	private Message messageScript;
+ 
+	//　表示させるメッセージ
+	private string message = "かかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかかか"
+	                         + "ききききききききききききききききききききききききききききききききききききききききききききききききききききききき\n"
+	                         + "くくくくく\n"
+	                         + "けけけけけけけけけけけけ";
     
 
     // Start is called before the first frame update
@@ -111,8 +119,12 @@ public class mainCameraScript : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
 
+        messageScript.SetMessagePanel (message);
 
-        yield return new WaitForSeconds(3);
+        while(!messageScript.isEndMessage)
+	    {
+		    yield return new WaitForSeconds(0.2f);
+	    }
 
         talking = false;
         talkOnce = false;
