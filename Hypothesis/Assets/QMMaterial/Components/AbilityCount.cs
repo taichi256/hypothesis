@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +12,14 @@ public class AbilityCount : MonoBehaviour
     public int GrappleLimit = 0;
     //set limit of Ability
 
+    public int AJLimitLimit = 1;
+    public int DashLimitLimit = 2;
+    public int GrappleLimitLimit = 3;
+
     public void ClickAJ()
     {
         int AC = AJLimit + DashLimit + GrappleLimit;
-        if (AbilityLimit>AC)
+        if (AbilityLimit>AC && AJLimitLimit>AJLimit)
         {
             AJLimit++;
         }
@@ -23,7 +27,7 @@ public class AbilityCount : MonoBehaviour
     public void ClickD()
     {
         int AC = AJLimit + DashLimit + GrappleLimit;
-        if (AbilityLimit > AC)
+        if (AbilityLimit > AC && DashLimitLimit>DashLimit)
         {
             DashLimit++;
         }
@@ -32,7 +36,7 @@ public class AbilityCount : MonoBehaviour
     public void ClickG()
     {
         int AC = AJLimit + DashLimit + GrappleLimit;
-        if (AbilityLimit > AC)
+        if (AbilityLimit > AC && GrappleLimitLimit>GrappleLimit)
         {
             GrappleLimit++;
         }

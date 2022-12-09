@@ -474,6 +474,21 @@ public class PlayerController : MonoBehaviour
             }
             
         }
+        if (other.gameObject.CompareTag("addAirJump"))
+        {
+            abilityCount.AJLimitLimit += 1;
+            Destroy(other.gameObject, 0.0f);
+        }
+        else if (other.gameObject.CompareTag("addDash"))
+        {
+            abilityCount.DashLimitLimit += 1;
+            Destroy(other.gameObject, 0.0f);
+        }
+        else if (other.gameObject.CompareTag("addGrapple"))
+        {
+            abilityCount.GrappleLimitLimit += 1;
+            Destroy(other.gameObject, 0.0f);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -481,8 +496,7 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("upWall"))
         {
             onUpWall = false;
-        }
-        if(other.gameObject.CompareTag("Talk"))
+        }else if(other.gameObject.CompareTag("Talk"))
         {
             inTalkBox = false;
             another = other.transform.parent.gameObject;

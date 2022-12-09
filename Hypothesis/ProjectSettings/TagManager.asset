@@ -15,6 +15,9 @@ TagManager:
   - Attack
   - Talk
   - sceneChanger
+  - addDash
+  - addAirJump
+  - addGrapple
   layers:
   - Default
   - TransparentFX
