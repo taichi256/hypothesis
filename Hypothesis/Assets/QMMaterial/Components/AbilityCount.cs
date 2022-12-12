@@ -15,8 +15,9 @@ public class AbilityCount : MonoBehaviour
     public int AJLimitLimit = 1;
     public int DashLimitLimit = 2;
     public int GrappleLimitLimit = 3;
+	//set the maximum count of setable ability (not used)
 
-    public void ClickAJ()
+    public void ClickA()
     {
         int AC = AJLimit + DashLimit + GrappleLimit;
         if (AbilityLimit>AC && AJLimitLimit>AJLimit)
