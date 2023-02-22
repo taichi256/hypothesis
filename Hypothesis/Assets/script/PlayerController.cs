@@ -80,8 +80,11 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
 
     public bool inTalkBox = false;
+    private bool alive = true;
 
     AbilityCount abilityCount;
+
+    CapsuleCollider2D sphereCol;
 
     //未使用
     /*public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
@@ -101,6 +104,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        sphereCol = GetComponent<CapsuleCollider2D>();
         mainCamera = GameObject.Find("Main Camera");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
@@ -125,32 +129,34 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //方向キーで左右移動、ジャンプをスペースキー
-        //ダブルジャンプはNキー、ダッシュはBキー
-        Direction = Input.GetAxisRaw("Horizontal");
-        Vector3 scale = transform.localScale;
-        if (Direction > 0) { GoRight(); anim.SetTrigger("Walk"); if (scale.x < 0) { scale.x = -scale.x; } }
-        if (Direction < 0){GoLeft(); anim.SetTrigger("Walk"); if (scale.x > 0) { scale.x = -scale.x; } }
-        transform.localScale = scale;
-        if (Direction == 0)anim.SetTrigger("OffWalk");
-        
-        if (Input.GetButtonDown("Jump"))
+        if(alive)
         {
-            Jump();
+            //方向キーで左右移動、ジャンプをスペースキー
+            //ダブルジャンプはNキー、ダッシュはBキー
+            Direction = Input.GetAxisRaw("Horizontal");
+            Vector3 scale = transform.localScale;
+            if (Direction > 0) { GoRight(); anim.SetTrigger("Walk"); if (scale.x < 0) { scale.x = -scale.x; } }
+            if (Direction < 0){GoLeft(); anim.SetTrigger("Walk"); if (scale.x > 0) { scale.x = -scale.x; } }
+            transform.localScale = scale;
+            if (Direction == 0)anim.SetTrigger("OffWalk");
+            
+            if (Input.GetButtonDown("Jump"))
+            {
+                Jump();
+            }
+            if (Input.GetButtonDown("AirJump"))
+            {
+                AirJump();
+            }
+            if (Input.GetButtonDown("Dush"))
+            {
+                Dush();
+            }
+            if(Input.GetButtonDown("Attack"))
+            {
+                Attack();
+            }
         }
-        if (Input.GetButtonDown("AirJump"))
-        {
-            AirJump();
-        }
-        if (Input.GetButtonDown("Dush"))
-        {
-            Dush();
-        }
-        if(Input.GetButtonDown("Attack"))
-        {
-            Attack();
-        }
-    
     }
 
     void FixedUpdate()
@@ -348,8 +354,7 @@ public class PlayerController : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("GameOver"))
         {
-            transform.position = new Vector2(firstPosX,firstPosY);
-            mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
+            StartCoroutine("Dead");       
         }
     }
 
@@ -502,5 +507,23 @@ public class PlayerController : MonoBehaviour
             another = other.transform.parent.gameObject;
             talk.transform.position = new Vector3(1000, 1000, another.transform.position.z);
         }
+    }
+
+    IEnumerator Dead()
+    {
+        alive = false;
+        sphereCol.enabled = false;
+        rbody.gravityScale = 0;
+        rbody.velocity = new Vector2(0,0);
+        for(int i=1; i<40; i++)
+        {
+            transform.Translate(0, 0.8f-i*0.1f, 0);
+            yield return new WaitForSeconds(0.05f);
+        }
+        transform.position = new Vector2(firstPosX,firstPosY);
+        mainCamera.transform.position = new Vector3(firstCamPosX, firstCamPosY, -10);
+        alive = true;
+        sphereCol.enabled = true;
+        rbody.gravityScale = 6;
     }
 }
