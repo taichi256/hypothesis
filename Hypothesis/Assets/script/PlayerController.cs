@@ -58,10 +58,10 @@ public class PlayerController : MonoBehaviour
     public bool fall;
     mainCameraScript mainCameraScript;
 
-    float firstPosX;
-    float firstPosY;
-    float firstCamPosX;
-    float firstCamPosY;
+    public float firstPosX;
+    public float firstPosY;
+    public float firstCamPosX;
+    public float firstCamPosY;
     public bool upCamera=false;
     private bool onUpWall=false;
 
@@ -111,10 +111,14 @@ public class PlayerController : MonoBehaviour
         talk = GameObject.Find("Talk");
         this.transform.position = new Vector2(PlayerPrefs.GetFloat("PLAYERPOSX", -25), PlayerPrefs.GetFloat("PLAYERPOSY", -2));
         mainCamera.transform.position = new Vector3(PlayerPrefs.GetFloat("CAMPOSX", -22), PlayerPrefs.GetFloat("CAMPOSY", 3), PlayerPrefs.GetFloat("CAMPOSZ", -10));
-        firstPosX = -25;
-        firstPosY = -2;
-        firstCamPosX = -22;
-        firstCamPosY = 3;
+
+        //stageの移転作業のため一時コメントアウト
+        //firstPosX = -25;
+        //firstPosY = -2;
+        //firstCamPosX = -22;
+        //firstCamPosY = 3;
+
+
         upCamera=false;
 
         GameObject QM = GameObject.Find("Main Camera/QM");
