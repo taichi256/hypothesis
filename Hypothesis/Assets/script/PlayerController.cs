@@ -133,6 +133,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Debug.DrawLine(transform.position - (transform.up * 0.1f) + transform.right * 1 / 2, transform.position - (transform.up * 0.1f) - transform.right * 1 / 2);
+        if (onGround)
+        {
+            Debug.Log("地に足の着いた生活");
+        }
         if(alive)
         {
             //方向キーで左右移動、ジャンプをスペースキー
