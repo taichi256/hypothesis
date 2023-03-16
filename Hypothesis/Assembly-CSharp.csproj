@@ -71,6 +71,7 @@
     <Compile Include="Assets\script\Message.cs" />
     <Compile Include="Assets\script\Enemies\Enemy1.cs" />
     <Compile Include="Assets\QMMaterial\Components\AbilityCount.cs" />
+    <Compile Include="Assets\lowerColliderChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

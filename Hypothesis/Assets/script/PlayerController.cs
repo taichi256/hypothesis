@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
     public int grabCooltime=5;
     int lastGrabRecord=0;
 
+    GameObject lowerCollider;
+
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
     public GameObject talk;
@@ -85,6 +87,8 @@ public class PlayerController : MonoBehaviour
     AbilityCount abilityCount;
 
     CapsuleCollider2D sphereCol;
+
+    
 
     //未使用
     /*public Dictionary<Movement,int> mov = new Dictionary<Movement,int>()
@@ -129,15 +133,27 @@ public class PlayerController : MonoBehaviour
         abilityCount.AJLimit = PlayerPrefs.GetInt("AIRJUMP", 0);
         abilityCount.DashLimit = PlayerPrefs.GetInt("DASH", 0);
         abilityCount.GrappleLimit = PlayerPrefs.GetInt("GRAPPLE", 0);
+
+        lowerCollider = GameObject.Find("lowerCollider");
     }
 
     void Update()
     {
-        Debug.DrawLine(transform.position - (transform.up * 0.1f) + transform.right * 1 / 2, transform.position - (transform.up * 0.1f) - transform.right * 1 / 2);
-        if (onGround)
-        {
-            Debug.Log("地に足の着いた生活");
-        }
+
+        onGround = lowerCollider.GetComponent<lowerColliderChecker>().OnGround();
+            
+        
+
+
+        //if (onGround)
+        //{
+        //    Debug.Log("地に足の着いた生活");
+        //}
+        //else
+        //{
+        //    Debug.Log("浮足立った気持ち");
+        //}
+
         if(alive)
         {
             //方向キーで左右移動、ジャンプをスペースキー
@@ -170,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
+        //onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
         if (onGround)
         {
             anim.SetTrigger("OffJump");
