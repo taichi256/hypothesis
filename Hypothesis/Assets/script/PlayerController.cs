@@ -116,11 +116,10 @@ public class PlayerController : MonoBehaviour
         this.transform.position = new Vector2(PlayerPrefs.GetFloat("PLAYERPOSX", -25), PlayerPrefs.GetFloat("PLAYERPOSY", -2));
         mainCamera.transform.position = new Vector3(PlayerPrefs.GetFloat("CAMPOSX", -22), PlayerPrefs.GetFloat("CAMPOSY", 3), PlayerPrefs.GetFloat("CAMPOSZ", -10));
 
-        //stageの移転作業のため一時コメントアウト
-        //firstPosX = -25;
-        //firstPosY = -2;
-        //firstCamPosX = -22;
-        //firstCamPosY = 3;
+        firstPosX = -25;
+        firstPosY = -2;
+        firstCamPosX = -22;
+        firstCamPosY = 3;
 
 
         upCamera=false;
@@ -142,17 +141,6 @@ public class PlayerController : MonoBehaviour
 
         onGround = lowerCollider.GetComponent<lowerColliderChecker>().OnGround();
             
-        
-
-
-        //if (onGround)
-        //{
-        //    Debug.Log("地に足の着いた生活");
-        //}
-        //else
-        //{
-        //    Debug.Log("浮足立った気持ち");
-        //}
 
         if(alive)
         {
@@ -186,7 +174,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //onGround = Physics2D.Linecast(transform.position - (transform.up * 0.1f)+transform.right*1/2, transform.position - (transform.up * 0.1f) - transform.right * 1/2, groundLayer);
         if (onGround)
         {
             anim.SetTrigger("OffJump");
