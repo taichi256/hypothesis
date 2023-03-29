@@ -16,6 +16,7 @@ public class mainCameraScript : MonoBehaviour
     public float finishedPos;
     public bool talking = false;
     public bool talkOnce = false;
+    public bool eventOnce = false;
     [SerializeField]
 	private Message messageScript;
  
@@ -37,21 +38,30 @@ public class mainCameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return) && playerScript.inTalkBox && !talkOnce)
+        if(Input.GetKeyDown(KeyCode.Return) && playerScript.inTalkBox && !talkOnce && !talking)
+        {
+            StartCoroutine("StopTalking");
+        }
+
+        if(playerScript.inEventBox && !eventOnce && !talking)
         {
             StartCoroutine("MoveTalking");
         }
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (playerScript.upCamera && !talking)
         {
-            maincameraRb.velocity = new Vector2(speedFunctionX() * 3, speedFunctionY() * 3);
+            maincameraRb.velocity = new Vector2(speedFunctionX() * 2, speedFunctionY() * 2);
         }
-        else
+        if (!playerScript.upCamera && !talking)
         {
-            maincameraRb.velocity = new Vector2(speedFunctionX() * 3, 0);
+            maincameraRb.velocity = new Vector2(speedFunctionX() * 2, 0);
+        }
+        if (talking)
+        {
+            maincameraRb.velocity = new Vector2(0, 0);
         }
         if (PlayerRelativePositionY() <= 1 && PlayerRelativePositionY() >= -0.3)
         {
@@ -106,7 +116,7 @@ public class mainCameraScript : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveTalking()
+    private IEnumerator StopTalking()
     {
         talkOnce = true;
         talking = true;
@@ -137,6 +147,36 @@ public class mainCameraScript : MonoBehaviour
 
         playerScript.talk.SetActive(true);
         playerScript.enabled = true;
+    }
+
+    private IEnumerator MoveTalking()
+    {
+        eventOnce = true;
+        talking = true;
+        playerScript.talk.SetActive(false);
+
+        for(int i=0; i<20; i++)
+        {
+            transform.Translate(0, -0.1f, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        messageScript.SetMessagePanel (message);
+
+        while(!messageScript.isEndMessage)
+	    {
+		    yield return new WaitForSeconds(0.2f);
+	    }
+
+        talking = false;
+
+        for(int i=0; i<20; i++)
+        {
+            transform.Translate(0, 0.1f, 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        playerScript.talk.SetActive(true);
     }
 
 }

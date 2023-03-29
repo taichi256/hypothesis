@@ -373,6 +373,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/lowerColliderChecker.cs"
 "Assets/QMMaterial/Components/AbilityCount.cs"
 "Assets/QMMaterial/Components/QMmaster.cs"
 "Assets/QMSelector.cs"

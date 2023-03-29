@@ -18,6 +18,7 @@ TagManager:
   - addDash
   - addAirJump
   - addGrapple
+  - event
   layers:
   - Default
   - TransparentFX
@@ -28,8 +29,8 @@ TagManager:
   - inVisibleWall
   - mainCamera
   - upWall
-  - 
-  - 
+  - mainCameraBlock
+  - player
   - 
   - 
   - 

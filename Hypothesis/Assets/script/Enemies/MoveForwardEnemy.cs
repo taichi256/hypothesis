@@ -8,7 +8,7 @@ public class MoveForwardEnemy : Enemy
     public float moveDirection = -1;
     public float speed = 2.0f;
     public bool isDestroy = false;
-    public float destroyTime=10.0f;
+    public float destroyTime=50000f;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,14 +20,15 @@ public class MoveForwardEnemy : Enemy
     void Move()
     {
         rbody.velocity= new Vector2(moveDirection * speed,rbody.velocity.y);
-        if ((isDestroy == true) && (destroyTime<=timeElapsed))
+        destroyTime--;
+        if(destroyTime < 1)
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         base.Update();
         Move();

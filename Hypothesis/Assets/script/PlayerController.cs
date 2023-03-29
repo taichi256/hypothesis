@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
 
     public bool inTalkBox = false;
+    public bool inEventBox = false;
     private bool alive = true;
 
     AbilityCount abilityCount;
@@ -477,9 +478,15 @@ public class PlayerController : MonoBehaviour
         {
             onUpWall = true;
         }
-        if(other.gameObject.CompareTag("Talk"))
+        if(other.gameObject.CompareTag("pushTalk"))
         {
             inTalkBox = true;
+            another = other.transform.parent.gameObject;
+            talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
+        }
+        if(other.gameObject.CompareTag("event"))
+        {
+            inEventBox = true;
             another = other.transform.parent.gameObject;
             talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
@@ -513,7 +520,12 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("upWall"))
         {
             onUpWall = false;
-        }else if(other.gameObject.CompareTag("Talk"))
+        }else if(other.gameObject.CompareTag("pushTalk"))
+        {
+            inTalkBox = false;
+            another = other.transform.parent.gameObject;
+            talk.transform.position = new Vector3(1000, 1000, another.transform.position.z);
+        }else if(other.gameObject.CompareTag("event"))
         {
             inTalkBox = false;
             another = other.transform.parent.gameObject;
