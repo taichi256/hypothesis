@@ -19,6 +19,8 @@ TagManager:
   - addAirJump
   - addGrapple
   - event
+  - pushTalk
+  - Grabbable
   layers:
   - Default
   - TransparentFX
