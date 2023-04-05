@@ -68,7 +68,6 @@
     <Compile Include="Assets\script\Enemies\MoveForwardEnemy.cs" />
     <Compile Include="Assets\script\Enemies\Enemy.cs" />
     <Compile Include="Assets\Simple Scene Fade Load System\Demo (You don&apos;t have to import this folder)\DemoScript.cs" />
-    <Compile Include="Assets\Anchor.cs" />
     <Compile Include="Assets\script\inVisibleWallScript.cs" />
     <Compile Include="Assets\script\Message.cs" />
     <Compile Include="Assets\script\Enemies\Enemy1.cs" />

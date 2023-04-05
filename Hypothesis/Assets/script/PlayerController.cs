@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour
 
     GameObject lowerCollider;
 
-    public GameObject anchor;
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
     public GameObject talk;
@@ -170,10 +169,6 @@ public class PlayerController : MonoBehaviour
             if(Input.GetButtonDown("Attack"))
             {
                 Attack();
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                anchor.SetActive(true);
             }
         }
     }
