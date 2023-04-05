@@ -379,6 +379,7 @@
 "Assets/QMMaterial/Components/AbilityCount.cs"
 "Assets/QMMaterial/Components/QMmaster.cs"
 "Assets/QMSelector.cs"
+"Assets/script/Anchor.cs"
 "Assets/script/ButtonScript.cs"
 "Assets/script/Enemies/Enemy.cs"
 "Assets/script/Enemies/Enemy1.cs"

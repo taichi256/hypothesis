@@ -58,12 +58,13 @@
   <ItemGroup>
     <Compile Include="Assets\script\mainCameraScript.cs" />
     <Compile Include="Assets\Simple Scene Fade Load System\Scripts\Initiate.cs" />
+    <Compile Include="Assets\script\PlayerController.cs" />
     <Compile Include="Assets\script\ButtonScript.cs" />
+    <Compile Include="Assets\script\Anchor.cs" />
     <Compile Include="Assets\script\Enemies\GunMan.cs" />
     <Compile Include="Assets\lowerColliderChecker.cs" />
     <Compile Include="Assets\Simple Scene Fade Load System\Scripts\Fader.cs" />
     <Compile Include="Assets\QMSelector.cs" />
-    <Compile Include="Assets\script\PlayerController.cs" />
     <Compile Include="Assets\QMMaterial\Components\QMmaster.cs" />
     <Compile Include="Assets\script\Enemies\MoveForwardEnemy.cs" />
     <Compile Include="Assets\script\Enemies\Enemy.cs" />
