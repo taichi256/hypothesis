@@ -5,17 +5,18 @@ using UnityEngine;
 public class Enemy1 : Enemy
 {
     public int enemy1HP = 10;
-    // Start is called before the first frame update
-    void Start()
+
+            // Start is called before the first frame update
+    new void Start()
     {
         HP = 10;
         base.Start();
     }
-    void Move()
+    new void Move()
     {
     }
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         Move();
