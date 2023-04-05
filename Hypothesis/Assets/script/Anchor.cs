@@ -10,22 +10,25 @@ public class Anchor : MonoBehaviour
     [SerializeField]
     float destroyTime;
 
+
+    [SerializeField]
+    GameObject player;
+
     float time;
     bool grapping=false;
+
 
     Vector2 mouseWorld;
     Vector2 transform2;
     Vector2 targetPos;
 
-    GameObject robo;
 
 
     void Start()
     {
         grapping = false;
 
-        robo = GameObject.Find("robo");
-        this.transform.position = robo.transform.position;
+        this.transform.position = player.transform.position;
         transform2 = this.transform.position;
         mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         targetPos = mouseWorld - transform2;
@@ -39,9 +42,11 @@ public class Anchor : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             this.gameObject.SetActive(false);
+            grapping = false;
         }   
-        else if (time > destroyTime && grapping)
+        else if (time > destroyTime && !grapping)
         {
+            
 
         }
     }
