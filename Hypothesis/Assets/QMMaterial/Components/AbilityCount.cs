@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class AbilityCount : MonoBehaviour
 {
-    public int AbilityLimit = 3;
+    [SerializeField] public int AbilityLimit = 3;
     //set limit of all of Ability
 
-    public int AJLimit = 0;
-    public int DashLimit = 0;
-    public int GrappleLimit = 0;
+    [SerializeField] public int AJLimit = 1;
+    [SerializeField] public int DashLimit = 1;
+    [SerializeField] public int GrappleLimit = 0;
     //set limit of Ability
 
-    public int AJLimitLimit = 1;
-    public int DashLimitLimit = 2;
-    public int GrappleLimitLimit = 3;
+    [SerializeField] public int AJLimitLimit = 1;
+    [SerializeField] public int DashLimitLimit = 2;
+    [SerializeField] public int GrappleLimitLimit = 3;
 	//set the maximum count of setable ability (not used)
 
     public void ClickA()

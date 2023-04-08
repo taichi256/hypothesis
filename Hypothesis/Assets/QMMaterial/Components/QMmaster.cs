@@ -24,10 +24,10 @@ public class QMmaster : MonoBehaviour
     void Start()
     {
         GetComponent<Canvas>().enabled = false;
-        APanel.SetActive(false);
-        MPanel.SetActive(false);
-        TPanel.SetActive(false);
-        EDPanel.SetActive(false);
+        //APanel.SetActive(false);
+        //MPanel.SetActive(false);
+        //TPanel.SetActive(false);
+        //EDPanel.SetActive(false);
     }
 
     
@@ -88,7 +88,10 @@ public class QMmaster : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        APanel.SetActive(false);
+        MPanel.SetActive(false);
+        TPanel.SetActive(false);
+        EDPanel.SetActive(false);
     }
 
 
