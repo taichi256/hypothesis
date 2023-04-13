@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     public GameObject anchor;
     private GameObject mainCamera;
     private Rigidbody2D mainCameraRb;
+    public GameObject talk;
     private GameObject another;
     private bool rotateCameraForward;
     public bool fall;
@@ -485,6 +486,8 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("pushTalk"))
         {
             inTalkBox = true;
+            another = other.transform.parent.gameObject;
+            talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
         if(other.gameObject.CompareTag("event"))
         {
@@ -492,7 +495,14 @@ public class PlayerController : MonoBehaviour
             another = other.transform.parent.gameObject;
             talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
-
+        if(other.gameObject.CompareTag("sceneChanger"))
+        {
+            if(SceneManager.GetActiveScene().name=="Main")
+            {
+                Initiate.Fade("Stage2", Color.black, 2.0f);
+            }
+            
+        }
         if (other.gameObject.CompareTag("addAirJump"))
         {
             abilityCount.AJLimitLimit += 1;
