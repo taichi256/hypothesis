@@ -114,7 +114,6 @@ public class PlayerController : MonoBehaviour
         mainCamera = GameObject.Find("Main Camera");
         mainCameraRb = mainCamera.GetComponent<Rigidbody2D>();
         mainCameraScript = mainCamera.GetComponent<mainCameraScript>();
-        talk = GameObject.Find("Talk");
         this.transform.position = new Vector2(PlayerPrefs.GetFloat("PLAYERPOSX", -25), PlayerPrefs.GetFloat("PLAYERPOSY", -2));
         mainCamera.transform.position = new Vector3(PlayerPrefs.GetFloat("CAMPOSX", -22), PlayerPrefs.GetFloat("CAMPOSY", 3), PlayerPrefs.GetFloat("CAMPOSZ", -10));
 
@@ -486,14 +485,10 @@ public class PlayerController : MonoBehaviour
         if(other.gameObject.CompareTag("pushTalk"))
         {
             inTalkBox = true;
-            another = other.transform.parent.gameObject;
-            talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
         if(other.gameObject.CompareTag("event"))
         {
             inEventBox = true;
-            another = other.transform.parent.gameObject;
-            talk.transform.position = new Vector3(another.transform.position.x + 5.4f, another.transform.position.y + 0.25f , another.transform.position.z);
         }
         if(other.gameObject.CompareTag("sceneChanger"))
         {
@@ -528,13 +523,9 @@ public class PlayerController : MonoBehaviour
         }else if(other.gameObject.CompareTag("pushTalk"))
         {
             inTalkBox = false;
-            another = other.transform.parent.gameObject;
-            talk.transform.position = new Vector3(1000, 1000, another.transform.position.z);
         }else if(other.gameObject.CompareTag("event"))
         {
             inTalkBox = false;
-            another = other.transform.parent.gameObject;
-            talk.transform.position = new Vector3(1000, 1000, another.transform.position.z);
         }
     }
 
