@@ -40,6 +40,7 @@
      <Compile Include="Assets/Simple Scene Fade Load System/Scripts/Initiate.cs" />
      <Compile Include="Assets/script/PressToTalkController.cs" />
      <Compile Include="Assets/script/PlayerController.cs" />
+     <Compile Include="Assets/EventController.cs" />
      <Compile Include="Assets/script/ButtonScript.cs" />
      <Compile Include="Assets/script/Anchor.cs" />
      <Compile Include="Assets/script/Enemies/GunMan.cs" />
@@ -55,7 +56,6 @@
      <Compile Include="Assets/script/SceneChanger.cs" />
      <Compile Include="Assets/script/Enemies/Enemy1.cs" />
      <Compile Include="Assets/QMMaterial/Components/AbilityCount.cs" />
-     <Compile Include="Assets/EventController.cs" />
      <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
      <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets/Simple Scene Fade Load System/ReadMeFirst.txt" />
