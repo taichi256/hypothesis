@@ -6,7 +6,7 @@ public class PressToTalkController : MonoBehaviour
 {
     [SerializeField]
     [TextArea(1, 20)]
-    public string message;
+    private string message;
     private GameObject talk;
     public GameObject mainCamera;
     mainCameraScript mainCameraScript;
